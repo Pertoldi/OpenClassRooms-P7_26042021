@@ -1,0 +1,17 @@
+<header class="p-3 bg-dark text-white">
+	<nav class="container-fluid">
+		<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+			<ul class="nav col-12 col-md-7 col-lg-8 me-lg-auto mb-2 justify-content-center mb-md-0">
+				<li>
+
+				</li>
+			</ul>
+
+			<div>
+				<button type="button" class="btn btn-outline-light me-2 mx-2" routerLink="auth/signup" *ngIf="!isAuth">Créer un compte</button>
+				<button type="button" class="btn btn-warning" routerLink="auth/signin"  *ngIf="!isAuth">Connexion</button>
+				<button type="button" class="btn btn-warning" (click)="onSignOut()"  *ngIf="isAuth">Déconnexion</button>
+			</div>
+		</div>
+	</nav>
+</header>
