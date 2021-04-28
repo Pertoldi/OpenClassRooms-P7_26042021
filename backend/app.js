@@ -8,12 +8,15 @@ const toobusy = require('toobusy-js');
 const bouncer = require('express-bouncer')(500, 10000, 5)
 require('dotenv').config()
 
+const userRoutes = require('./routes/user');
+
 //Connexion à la base de données
 const db = mysql.createConnection({
 	host: `${process.env.DB_HOST}`,
 	user: `${process.env.DB_USER}`,
 	password: `${process.env.DB_PWD}`,
-	database: `${process.env.DB_DATABASE}`
+	database: `${process.env.DB_DATABASE}`,
+	charset: `utf8`
 })
 
 db.connect((err) => {
@@ -49,6 +52,6 @@ app.use((req, res, next) => {
 	next();
 });
 
-
+app.use('/auth/', userRoutes);
 
 module.exports = app
