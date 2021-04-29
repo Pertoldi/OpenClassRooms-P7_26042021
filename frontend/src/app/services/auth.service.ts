@@ -43,22 +43,24 @@ export class AuthService {
 
 	signInUser(email: string, password: string) {
 		return new Promise<void>(
-			(resolve, rejects) => {
-				fetch('http://localhost:3000/auth/signin', {
+			async (resolve, rejects) => {
+				let dataFetch = await fetch('http://localhost:3000/auth/signin', {
 					method: 'POST',
 					body: JSON.stringify({ email, password }),
 					headers: {
 						'Accept': 'application/json',
 						'Content-Type': 'application/json'
 					}
-				}).then((data) => {
-					let res = JSON.parse(data.toString())
-					console.log(res);
-					
-					localStorage.setItem('token', res)
-					resolve()
+				}).then((data: Response) => {
+					return data.json()
 				})
 					.catch(error => rejects(error))
+
+				console.log('dataFetch TOKEN : ', dataFetch.token)
+				localStorage.setItem('token', dataFetch.token)
+				localStorage.setItem('userId', dataFetch.userId)
+				
+				resolve()
 			}
 		)
 	}
