@@ -32,7 +32,7 @@ export class SigninComponent implements OnInit {
 
 		this.authService.signInUser(email, password).then(
 			() => {
-				//this.router.navigate(['/'])
+				this.router.navigate(['/post-list'])
 			},
 			(error) => {
 				this.errorMessage = error

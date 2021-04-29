@@ -11,6 +11,8 @@ import { AuthService } from './services/auth.service';
 import { AuthGuardService } from './services/auth-guard.service';
 import { FourOhFourComponent } from './four-oh-four/four-oh-four.component';
 import { HttpClientModule } from '@angular/common/http';
+import { PostListComponent } from './post-list/post-list.component';
+import { SinglePostComponent } from './post-list/single-post/single-post.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import { HttpClientModule } from '@angular/common/http';
     HeaderComponent,
     SigninComponent,
     SignupComponent,
-    FourOhFourComponent
+    FourOhFourComponent,
+    PostListComponent,
+    SinglePostComponent
   ],
   imports: [
     BrowserModule,

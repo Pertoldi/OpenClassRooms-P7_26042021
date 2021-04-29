@@ -7,6 +7,7 @@ import { FourOhFourComponent } from './four-oh-four/four-oh-four.component';
 const routes: Routes = [
   { path: 'auth/signup', component: SignupComponent },
   { path: 'auth/signin', component: SigninComponent },
+  { path: 'post-list', component: SigninComponent },
   { path: 'not-found', component: FourOhFourComponent },
 	{ path: '**', redirectTo: '/not-found' }
 ];
