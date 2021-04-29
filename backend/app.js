@@ -1,6 +1,4 @@
 const express = require('express')
-const path = require('path')
-const mysql = require('mysql')
 
 //Ces paquets sont là pour la sécurité
 const helmet = require('helmet')
@@ -9,24 +7,6 @@ const bouncer = require('express-bouncer')(500, 10000, 5)
 require('dotenv').config()
 
 const userRoutes = require('./routes/user');
-
-//Connexion à la base de données
-const db = mysql.createConnection({
-	host: `${process.env.DB_HOST}`,
-	user: `${process.env.DB_USER}`,
-	password: `${process.env.DB_PWD}`,
-	database: `${process.env.DB_DATABASE}`,
-	charset: `utf8`
-})
-
-db.connect((err) => {
-	if (err) {
-		console.log('Connexion à Mysql échouée !');
-		throw err
-	}
-	console.log('Connexion à MySQL réussi !')
-})
-
 
 const app = express()
 app.use(express.json())	//On indique que les échanges se fonds en JSON
