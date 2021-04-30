@@ -25,18 +25,6 @@ export class AuthService {
 					.catch((error) => {
 						reject(error)
 					})
-
-				// this.httpClient.post('http://localhost:3000/auth/signup', JSON.stringify({ firstName, lastName, email, password }))
-				// .subscribe(
-				// 	() => {
-				// 		console.log('Enregistrement terminé !')
-				// 		resolve()
-				// 	},
-				// 	(error) => {
-				// 		console.log('Erreur ! : ' + error)
-				// 		reject(error)
-				// 	}
-				// )
 			}
 		)
 	}
@@ -56,13 +44,36 @@ export class AuthService {
 				})
 					.catch(error => rejects(error))
 
-				console.log('dataFetch TOKEN : ', dataFetch.token)
 				localStorage.setItem('token', dataFetch.token)
 				localStorage.setItem('userId', dataFetch.userId)
-				
 				resolve()
 			}
 		)
 	}
+
+	isConnect(): boolean | Promise<boolean> {
+		let token = localStorage.getItem('token')
+		let userId = localStorage.getItem('userId')
+		if (token == null || userId == null) return false
+		
+		return new Promise<boolean>(
+			async (resolve, rejects) => {
+				let dataFetch = await fetch('http://localhost:3000/auth/isConnect', {
+					method: 'POST',
+					body: JSON.stringify({ token, userId }),
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${token}`
+					}
+				}).then((data: Response) => {
+					return data.json()
+				})
+					.catch(error => rejects(error))
+				return resolve(dataFetch)
+			}
+		)
+	}
+
 
 }

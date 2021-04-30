@@ -1,0 +1,21 @@
+<li class="list-group-item my-5">
+	<div class="container-fluid postCard">
+		<h3>{{ postTitle }}</h3>
+		<div class="postCard__profilContainer">
+			<img src="{{ postAuthor[2] }}" alt="photo_profil" class="postCard__imgProfil">
+			<div class="postCard__profilContainer--text">
+				<div class="postCard__names">par {{ postAuthor[0]}} {{ postAuthor[1] }}</div>
+				<div class="postCard__date">Le {{ postDate | date:'MMM d, y, h:mm:ss a' }}</div>
+			</div>
+		</div>
+		<img src="{{ postUrl }}" alt="Un Asyméchat" class="postCard__img my-2">
+		<p class="postCard__description">{{ postDescription }}</p>
+		<hr>
+		<div class="postCard__iconInfoContainer"><a>{{ postLikes }} <i class="far fa-thumbs-up"></i> J'aimes</a>
+			<a> {{ postNbCommentaires }} <i class="far fa-comment-alt"></i> Commentaires</a></div>
+		<hr>
+		<!-- TODO les commentaires + un imput textarea pour ajouter des copmmentaires -->
+
+
+	</div>
+</li>

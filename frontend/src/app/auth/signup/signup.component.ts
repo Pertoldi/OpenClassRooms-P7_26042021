@@ -36,7 +36,7 @@ export class SignupComponent implements OnInit {
 
 		this.authService.createNewUser(firstName, lastName, email, password)
 		.then( () => {
-			this.router.navigate(['/wall'])  	// à implementer (WallPage une fois connecter)
+			this.router.navigate(['/post-list'])
 		})
 		.catch( (error) => {
 			this.errorMessage = error

@@ -1,0 +1,37 @@
+.postCard {
+	&__profilContainer {
+		display: flex;
+		&--txt {
+			flex-direction: column;
+		}
+	}
+	&__imgProfil {
+		width: 55px;
+		height: 55px;
+		object-fit: cover;
+		border: 1px solid rgba(0, 0, 0, 0.125);
+		border-radius: 50%;
+		margin-right: 10px;
+	}
+	&__img {
+		width: 100%;
+		height: 100%;
+		max-height: 550px;
+		object-fit: cover;
+		border:  1px solid rgba(0, 0, 0, 0.125);
+	}
+	&__description {
+		margin: 0 5px 0;
+	}
+	&__iconLike {
+		color: blue;
+	}
+	&__iconInfoContainer {
+		display: flex;
+		justify-content: space-around;
+	}
+}
+
+li {
+	box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.125);
+}
