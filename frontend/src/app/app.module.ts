@@ -33,7 +33,8 @@ import { SinglePostComponent } from './post-list/single-post/single-post.compone
   ],
   providers: [
     AuthService,
-		AuthGuardService
+		AuthGuardService,
+    HeaderComponent
   ],
   bootstrap: [AppComponent]
 })

@@ -1,1 +1,4 @@
-<p>post-list works!</p>
+<ul class="list-group">
+	<app-single-post *ngFor="let post of posts" [postAuthor]=post.author [postTitle]="post.title" [postDate]="post.date" [postUrl]=post.post_URL [postDescription]="post.description" [postLikes]="post.likes" [postNbCommentaires]="post.nbCommentaires">
+	</app-single-post>
+</ul>

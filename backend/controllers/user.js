@@ -87,15 +87,25 @@ exports.signin = (req, res, next) => {
 								)
 							})
 						})
-					// console.log(results)
-					// console.log(results[0].email)
-					// console.log(results[0].id)
-					// data = [results[0].email, results[0].id]
-					// console.log(JSON.stringify(data))
-					// res.status(201).json({ message: 'Signin work for now !', data: data })
 				}
 			})
 	} else {
 		res.status(400).json({ error: 'Mail ou mot de passe non conforme !' })
 	}
+}
+
+exports.isConnect = (req, res, next) => {
+	try {
+		const token = req.headers.authorization.split(' ')[1]
+		const decodedToken = jwt.verify(token, `${process.env.TOKEN_SECRET}`)
+		const userId = decodedToken.userId;
+		if (req.body.userId && req.body.userId == userId) {
+			res.status(200).json(true)
+		} else {
+			res.status(401).json(false)
+		}
+	} catch (error) {
+		res.status(401).json(false)
+	}
+
 }

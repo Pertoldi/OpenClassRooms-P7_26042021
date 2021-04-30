@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HeaderComponent } from 'src/app/header/header.component';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -8,12 +9,13 @@ import { AuthService } from 'src/app/services/auth.service';
 	templateUrl: './signin.component.html',
 	styleUrls: ['./signin.component.scss']
 })
+
 export class SigninComponent implements OnInit {
 
 	errorMessage!: string
 	signInForm!: FormGroup
 
-	constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) { }
+	constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private headerCompenent :HeaderComponent) { }
 
 	ngOnInit():void {
 		this.initForm()
@@ -32,6 +34,7 @@ export class SigninComponent implements OnInit {
 
 		this.authService.signInUser(email, password).then(
 			() => {
+				this.headerCompenent.onSignInUp()
 				this.router.navigate(['/post-list'])
 			},
 			(error) => {
