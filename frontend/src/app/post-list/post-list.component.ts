@@ -22,8 +22,8 @@ export class PostListComponent implements OnInit {
 			author: ['Nom', 'Prenom', '../../assets/people-2388584_1280.png'],
 			date: new Date(),
 			title: 'test post',
-			post_URL: '../../assets/db44y4q-8e2f43c7-6568-40d7-8558-0631ddc2c446.jpg',
-			description: 'Un Asyméchat',
+			post_URL: '../../assets/giphy.gif',
+			description: 'Un GIF pour tester',
 			likes: 2,
 			nbCommentaires: 0
 		},
@@ -40,8 +40,10 @@ export class PostListComponent implements OnInit {
 
 	constructor() { }
 
-	ngOnInit(): void {
+	async ngOnInit(): Promise<void> {
 		//TODO un postServices pour demander les posts sur la base de donénes
+		let data = await fetch('http://localhost:3000/post/all')
+		await console.log('data is :', data)
 	}
 
 }

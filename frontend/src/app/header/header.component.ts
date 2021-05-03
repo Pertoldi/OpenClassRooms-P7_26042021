@@ -23,20 +23,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 	onSignOut(): void {
 		this.isAuth = false
-		localStorage.removeItem('token')
-		localStorage.removeItem('userId')
+		sessionStorage.removeItem('token')
+		sessionStorage.removeItem('userId')
 		this.router.navigate(['/auth/signin'])
 	}
 
-	async onSignInUp() {//TODO ne marche pas, faire un service? ou un subject?
+	async onSignInUp() {//TODO ne marche pas, faire un subject
 		this.isAuth = await this.authService.isConnect()
 		console.log(' onSignInUp isAuth is :', this.isAuth)
 	}
 
 	ngOnDestroy(): void {
 		this.isAuth = false
-		localStorage.removeItem('token')
-		localStorage.removeItem('userId')
+		sessionStorage.removeItem('token')
+		sessionStorage.removeItem('userId')
 	}
 
 }
