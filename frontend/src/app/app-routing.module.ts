@@ -7,6 +7,7 @@ import { PostListComponent } from './post-list/post-list.component';
 import { AuthGuardService } from './services/auth-guard.service'
 
 const routes: Routes = [
+  { path: '', component: SigninComponent },
   { path: 'auth/signup', component: SignupComponent },
   { path: 'auth/signin', component: SigninComponent },
   { path: 'post-list', canActivate: [AuthGuardService], component: PostListComponent },

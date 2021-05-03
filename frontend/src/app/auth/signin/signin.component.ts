@@ -15,7 +15,7 @@ export class SigninComponent implements OnInit {
 	errorMessage!: string
 	signInForm!: FormGroup
 
-	constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private headerCompenent :HeaderComponent) { }
+	constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) { }
 
 	ngOnInit():void {
 		this.initForm()
@@ -34,7 +34,6 @@ export class SigninComponent implements OnInit {
 
 		this.authService.signInUser(email, password).then(
 			() => {
-				this.headerCompenent.onSignInUp()
 				this.router.navigate(['/post-list'])
 			},
 			(error) => {

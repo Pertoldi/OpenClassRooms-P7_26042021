@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken')
 const db = require('../config/mysql.js')
 
 exports.signup = (req, res, next) => {
-	console.log(req);
 	let firstName = req.body.firstName
 	let lastName = req.body.lastName
 	let email = req.body.email
@@ -56,42 +55,50 @@ exports.signup = (req, res, next) => {
 }
 
 exports.signin = (req, res, next) => {
-	let reqEmail = req.body.email
-	let password = req.body.password
-	let isOk = true
-	let checkSpecialCaractere = /^[^@&"'`~^#{}<>_=\[\]()!:;,?./§$£€*\+]+$/
-	let checkSpecialCaractereForEmail = /^[^&"'`~^#{}<>_=\[\]()!:;,?/§$£€*\+]+$/
 
-	//CTRL formulaire cote server
-	if (!checkSpecialCaractereForEmail.test(reqEmail)) isOk = false
-	if (!checkSpecialCaractere.test(password)) isOk = false
-
-	if (isOk) {
-		db.query(`
-			SELECT email,id,password
-		 	FROM users 
-			WHERE email = '${reqEmail}'`,
-			function (error, results, fields) {
-				if (error) {
-					res.status(401).json({ error: 'User not found !' })
-				} else {
-					bcrypt.compare(password, results[0].password)
-						.then(valid => {
-							if (!valid) return res.status(401).json({ error: 'Mot de passe incorrect !' })
-							res.status(200).json({
-								userId: results[0].id,
-								token: jwt.sign(
-									{ userId: results[0].id },
-									`${process.env.TOKEN_SECRET}`,
-									{ expiresIn: '6h' }
-								)
+	try {
+		let reqEmail = req.body.email
+		let password = req.body.password
+		let isOk = true
+		let checkSpecialCaractere = /^[^@&"'`~^#{}<>_=\[\]()!:;,?./§$£€*\+]+$/
+		let checkSpecialCaractereForEmail = /^[^&"'`~^#{}<>_=\[\]()!:;,?/§$£€*\+]+$/
+	
+		//CTRL formulaire cote server
+		if (!checkSpecialCaractereForEmail.test(reqEmail)) isOk = false
+		if (!checkSpecialCaractere.test(password)) isOk = false
+	
+		if (isOk) {
+			db.query(`
+				SELECT email,id,password
+				 FROM users 
+				WHERE email = '${reqEmail}'`,
+				function (error, results, fields) {
+					if (error) {
+						res.status(401).json({ error: 'User not found !' })
+					} else if (results == null | results[0] == undefined) {
+						res.status(401).json({ error: 'User not found !' })
+					}else {
+						bcrypt.compare(password, results[0].password)
+							.then(valid => {
+								if (!valid) return res.status(401).json({ error: 'Mot de passe incorrect !' })
+								res.status(200).json({
+									userId: results[0].id,
+									token: jwt.sign(
+										{ userId: results[0].id },
+										`${process.env.TOKEN_SECRET}`,
+										{ expiresIn: '6h' }
+									)
+								})
 							})
-						})
-				}
-			})
-	} else {
-		res.status(400).json({ error: 'Mail ou mot de passe non conforme !' })
+					}
+				})
+		} else {
+			res.status(400).json({ error: 'Mail ou mot de passe non conforme !' })
+		}
+	} catch (error) {
+		res.status(500).json({ error })
 	}
+
 }
 
 exports.isConnect = (req, res, next) => {
@@ -107,5 +114,6 @@ exports.isConnect = (req, res, next) => {
 	} catch (error) {
 		res.status(401).json(false)
 	}
-
 }
+
+//TODO AJOUTER: une route isAdmin pour voir si la personne connecter est admin.

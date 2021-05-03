@@ -7,6 +7,7 @@ const bouncer = require('express-bouncer')(500, 10000, 5)
 require('dotenv').config()
 
 const userRoutes = require('./routes/user');
+const postRoutes = require('./routes/post')
 
 const app = express()
 app.use(express.json())	//On indique que les échanges se fonds en JSON
@@ -33,5 +34,6 @@ app.use((req, res, next) => {
 });
 
 app.use('/auth/', userRoutes);
+app.use('/post/', postRoutes);
 
 module.exports = app

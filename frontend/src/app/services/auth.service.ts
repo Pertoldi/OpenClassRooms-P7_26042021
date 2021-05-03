@@ -44,18 +44,18 @@ export class AuthService {
 				})
 					.catch(error => rejects(error))
 
-				localStorage.setItem('token', dataFetch.token)
-				localStorage.setItem('userId', dataFetch.userId)
+				sessionStorage.setItem('token', dataFetch.token)
+				sessionStorage.setItem('userId', dataFetch.userId)
 				resolve()
 			}
 		)
 	}
 
 	isConnect(): boolean | Promise<boolean> {
-		let token = localStorage.getItem('token')
-		let userId = localStorage.getItem('userId')
+		let token = sessionStorage.getItem('token')
+		let userId = sessionStorage.getItem('userId')
 		if (token == null || userId == null) return false
-		
+
 		return new Promise<boolean>(
 			async (resolve, rejects) => {
 				let dataFetch = await fetch('http://localhost:3000/auth/isConnect', {
