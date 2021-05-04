@@ -10,6 +10,6 @@ export class AuthGuardService {
 	constructor(private authService: AuthService) { }
 
 	canActivate(): Observable<boolean> | Promise<boolean> | boolean {
-		return this.authService.isConnect()
+		return true//this.authService.isConnect()
 	}
 }
