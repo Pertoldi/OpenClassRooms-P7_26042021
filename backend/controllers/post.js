@@ -6,5 +6,6 @@ exports.getAllPosts = (req, res, next) => {
 	db.query('SELECT posts.id, users.id AS userId, users.firstName, users.lastName, users.photo_URL AS userUrl, posts.date, posts.url, posts.title, posts.description FROM posts JOIN users ON users.id = posts.userId;', (error, results, fields) => {
 		if (error) res.status(400).json({ error })
 		res.status(200).json({ results })
+
 	})
 }

@@ -7,7 +7,9 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class SinglePostComponent implements OnInit {
 
-  @Input() postAuthor!: string[]
+  @Input() postFirstName!: string
+  @Input() postLastName!: string
+  @Input() postUserUrl!: string
 	@Input() postTitle!: string
 	@Input() postDate!: Date
 	@Input() postUrl!: string
@@ -18,8 +20,6 @@ export class SinglePostComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    
-    console.log(this.postUrl);
     
   }
 

@@ -40,6 +40,12 @@ export class SigninComponent implements OnInit {
 				this.errorMessage = error
 			}
 		)
+
+		this.authService.isAuthObservable.subscribe(() => {
+			//Pour mettre à jour l'observable
+		}, (error) => {
+			throw error
+		})
 	}
 
 }

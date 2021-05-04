@@ -13,6 +13,8 @@ import { FourOhFourComponent } from './four-oh-four/four-oh-four.component';
 import { HttpClientModule } from '@angular/common/http';
 import { PostListComponent } from './post-list/post-list.component';
 import { SinglePostComponent } from './post-list/single-post/single-post.component';
+import { PostFormComponent } from './post-list/post-form/post-form.component';
+import { PostsService } from './services/posts.service';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,8 @@ import { SinglePostComponent } from './post-list/single-post/single-post.compone
     SignupComponent,
     FourOhFourComponent,
     PostListComponent,
-    SinglePostComponent
+    SinglePostComponent,
+    PostFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,7 +36,8 @@ import { SinglePostComponent } from './post-list/single-post/single-post.compone
   ],
   providers: [
     AuthService,
-		AuthGuardService
+		AuthGuardService,
+    PostsService
   ],
   bootstrap: [AppComponent]
 })

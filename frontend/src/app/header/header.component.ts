@@ -17,8 +17,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	constructor(private authService: AuthService, private router: Router) { }
 
 	async ngOnInit() {
-		this.isAuth = await this.authService.isConnect()	//pour garder la persistantce de session à chaque ctrl+S
-		await console.log('On init isAuth is :', this.isAuth)
+		this.authService.isAuthObservable.subscribe((isAuth:any) => {	//On souscrit à l'observable pour garder la persistance de session
+			this.isAuth = isAuth
+		}, (error) => {
+			throw error
+		})
 	}
 
 	onSignOut(): void {
@@ -28,8 +31,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		this.router.navigate(['/auth/signin'])
 	}
 
-	async onSignInUp() {//TODO ne marche pas, faire un subject
-		this.isAuth = await this.authService.isConnect()
+	async onSignInUp() {//TODO ne marche pas, faire un Observable
+		//this.isAuth = await this.authService.isConnect()
 		console.log(' onSignInUp isAuth is :', this.isAuth)
 	}
 
