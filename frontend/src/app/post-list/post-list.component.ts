@@ -12,33 +12,7 @@ import { PostsService } from '../services/posts.service';
 export class PostListComponent implements OnInit {
 
 	posts: Array<any> = [
-		// {
-		// 	author: ['Nom', 'Prenom', '../../assets/people-2388584_1280.png'],
-		// 	date: new Date(),
-		// 	title: 'test post',
-		// 	post_URL: '../../assets/db44y4q-8e2f43c7-6568-40d7-8558-0631ddc2c446.jpg',
-		// 	description: 'Un Asyméchat',
-		// 	likes: 2,
-		// 	nbCommentaires: 0
-		// },
-		// {
-		// 	author: ['Nom', 'Prenom', '../../assets/people-2388584_1280.png'],
-		// 	date: new Date(),
-		// 	title: 'test post',
-		// 	post_URL: '../../assets/giphy.gif',
-		// 	description: 'Un GIF pour tester',
-		// 	likes: 2,
-		// 	nbCommentaires: 0
-		// },
-		// {
-		// 	author: ['Nom', 'Prenom', '../../assets/people-2388584_1280.png'],
-		// 	date: new Date(),
-		// 	title: 'test post',
-		// 	post_URL: '../../assets/db44y4q-8e2f43c7-6568-40d7-8558-0631ddc2c446.jpg',
-		// 	description: 'Un Asyméchat',
-		// 	likes: 2,
-		// 	nbCommentaires: 0
-		// }
+
 	]
 
 	postsSubscription!: Subscription
