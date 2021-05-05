@@ -3,7 +3,7 @@
 
 		<h2>Ajouter un post</h2>
 
-		<form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+		<form enctype="multipart/form-data" [formGroup]="postForm" (ngSubmit)="onSubmit()">
 			<div class="form-group">
 				<label for="title">Titre</label>
 				<input type="text" id="title" class="form-control" formControlName="title">
@@ -13,12 +13,14 @@
 				<input type="text" id="description" class="form-control" formControlName="description">
 			</div>
 			<div class="form-group">
-				<label for="post_URL">Image</label>
-				<input type="file" id="post_URL" accept="image/png, image/jpeg, image/bmp, image/webp, image/svg+xml, image/gif" class="form-control" formControlName="post_URL">
+				<label for="postImg">Image</label>
+				<input type="file" id="postImg"
+					accept="image/png, image/jpeg, image/bmp, image/webp, image/svg+xml, image/gif" class="form-control"
+					formControlName="postImg" (change)="onFileAdded($event)" required>
 			</div>
 
 			<button class="btn btn-primary" type="submit" [disabled]="postForm.invalid">Créer un post</button>
 		</form>
-
+		<p class="text-danger">{{ errorMessage }}</p>
 	</div>
 </div>

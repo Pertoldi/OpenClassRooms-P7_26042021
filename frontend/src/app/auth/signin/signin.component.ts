@@ -34,7 +34,9 @@ export class SigninComponent implements OnInit {
 
 		this.authService.signInUser(email, password).then(
 			() => {
+				this.authService.observer.next(true)
 				this.router.navigate(['/post-list'])
+				
 			},
 			(error) => {
 				this.errorMessage = error
@@ -42,7 +44,6 @@ export class SigninComponent implements OnInit {
 		)
 
 		this.authService.isAuthObservable.subscribe(() => {
-			//Pour mettre à jour l'observable
 		}, (error) => {
 			throw error
 		})

@@ -16,6 +16,7 @@ import { SinglePostComponent } from './post-list/single-post/single-post.compone
 import { PostFormComponent } from './post-list/post-form/post-form.component';
 import { PostsService } from './services/posts.service';
 
+
 @NgModule({
   declarations: [
     AppComponent,

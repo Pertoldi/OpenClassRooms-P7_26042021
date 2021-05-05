@@ -1,4 +1,4 @@
-const db = require('../config/mysql.js')
+const db = require('../config/mysql-config.js')
 
 exports.getAllPosts = (req, res, next) => {
 	//renvoie la liste des posts avec (id, auteur (id, nom, prénom, img), date, titre, url, decription) //les ids sont à enregistrer pour modifier/supprimer
@@ -8,4 +8,16 @@ exports.getAllPosts = (req, res, next) => {
 		res.status(200).json({ results })
 
 	})
+}
+
+exports.addPost = (req, res, next) => {
+	console.log('req.body.data is :', req.body.data)
+	console.log('req.body is :', req.body);
+	console.log('file is :', req.file);
+	console.log(req.data);
+	console.log(req.body.image);
+	// const postObject = JSON.parse(req.body)
+	// console.log('postObject is :', postObject)
+	res.status(200).json('requete recu !')
+
 }

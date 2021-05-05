@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-const db = require('../config/mysql.js')
+const db = require('../config/mysql-config.js')
 
 exports.signup = (req, res, next) => {
 	let firstName = req.body.firstName

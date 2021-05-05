@@ -31,10 +31,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		this.router.navigate(['/auth/signin'])
 	}
 
-	async onSignInUp() {//TODO ne marche pas, faire un Observable
-		//this.isAuth = await this.authService.isConnect()
-		console.log(' onSignInUp isAuth is :', this.isAuth)
-	}
 
 	ngOnDestroy(): void {
 		this.isAuth = false
