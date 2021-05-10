@@ -12,6 +12,6 @@ module.exports = (req, res, next) => {
 			next();//TODO envoyer userId à chaque requete et inverser se If Else
 		}
 	} catch (error) {
-		res.status(401).json({ error: error | 'Requête non authentifiée !' });  // si il y a une erreur envoie l'erreur, si un pb sans erreur renvoyé -> req non authentifié
+		res.status(401).json({ error : 'Requête non authentifiée !' });  // si il y a une erreur envoie l'erreur, si un pb sans erreur renvoyé -> req non authentifié
 	}
 }

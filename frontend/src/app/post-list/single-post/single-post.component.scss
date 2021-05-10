@@ -1,4 +1,30 @@
 .postCard {
+	&__titleContainer {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		&--options {
+			position: absolute;
+			right: 20px;
+			display: none;
+			flex-direction: column;
+			background-color: #b9bbbe;
+			padding: 5px;
+			border-radius: 5px;
+			&::before {
+				content: '';
+				position: absolute;
+				display : inline-block;
+				top: -10px;
+				right: 15px;
+				height : 0;
+				width : 0;
+				border-right : 10px solid transparent;
+				border-bottom : 14px solid #b9bbbe;
+				border-left : 10px solid transparent;
+			}
+		}
+	}
 	&__profilContainer {
 		display: flex;
 		&--txt {
@@ -30,6 +56,10 @@
 		display: flex;
 		justify-content: space-around;
 	}
+}
+
+.fa-circle {
+	font-size: 0.7rem;
 }
 
 li {

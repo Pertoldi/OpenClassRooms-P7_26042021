@@ -12,7 +12,6 @@ export class AuthService {
 		this.observer = observer;
 		let token = sessionStorage.getItem('token')
 		let userId = sessionStorage.getItem('userId')
-		console.log('ON PREND LE TOKEN');
 		
 		if (token == null || userId == null) {
 			this.observer.next(false)

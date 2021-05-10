@@ -1,5 +1,5 @@
-const multer = require("multer");
-const fs = require('fs');
+const multer = require("multer")
+const fs = require('fs')
 
 // Middleware config.
 const MIME_TYPE_MAP = {
@@ -13,14 +13,14 @@ const MIME_TYPE_MAP = {
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
         let dir = 'images'
-        if (!fs.existsSync(dir)) fs.mkdir(dir)
+        if (!fs.existsSync(dir)) {fs.mkdir(dir)}
         callback(null, dir)
     },
     filename: (req, file, callback) => {
-        const name = file.originalname.split(" ").join("_").split('.').join('_');
-        const extension = MIME_TYPE_MAP[file.mimetype];
-        callback(null, name + Date.now() + "." + extension);
+        const name = file.originalname.split(" ").join("_").split('.').join('_')
+        const extension = MIME_TYPE_MAP[file.mimetype]
+        callback(null, name + Date.now() + "." + extension)
     },
 });
 
-module.exports = multer({ storage }).single("file");
+module.exports = multer({ storage }).single("file")

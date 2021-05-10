@@ -16,10 +16,10 @@ export class PostFormComponent implements OnInit {
 	errorMessage!: string
 	file!: File
 
-	constructor(private formBuilder: FormBuilder, private postsService: PostsService, private router: Router) { }
+	constructor(private formBuilder: FormBuilder, private postsService: PostsService) { }
 
 	ngOnInit(): void {
-		this.initForm();
+		this.initForm()
 	}
 
 	initForm(): void {
@@ -35,6 +35,7 @@ export class PostFormComponent implements OnInit {
 		const description = this.postForm.get('description')!.value
 
 		this.postsService.createNewPost(title, description, this.file)
+		//le service revoie sur le compoenent post-list
 
 	}
 
@@ -42,7 +43,6 @@ export class PostFormComponent implements OnInit {
 		if (event == null) { console.log('FILE IS NOT UPLOADED !') }
 		else {
 			this.file = event.target.files[0]
-			console.log('file is :', this.file)
 		}
 	}
 }
