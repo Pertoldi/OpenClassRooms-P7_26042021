@@ -15,6 +15,8 @@ import { PostListComponent } from './post-list/post-list.component';
 import { SinglePostComponent } from './post-list/single-post/single-post.component';
 import { PostFormComponent } from './post-list/post-form/post-form.component';
 import { PostsService } from './services/posts.service';
+import { PostModifyComponent } from './post-list/post-modify/post-modify.component';
+
 
 @NgModule({
   declarations: [
@@ -26,6 +28,7 @@ import { PostsService } from './services/posts.service';
     PostListComponent,
     SinglePostComponent,
     PostFormComponent,
+    PostModifyComponent,
   ],
   imports: [
     BrowserModule,

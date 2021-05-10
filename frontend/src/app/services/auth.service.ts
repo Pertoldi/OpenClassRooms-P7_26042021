@@ -12,8 +12,10 @@ export class AuthService {
 		this.observer = observer;
 		let token = sessionStorage.getItem('token')
 		let userId = sessionStorage.getItem('userId')
-		if (token == null || userId == null) observer.next(false)
-
+		
+		if (token == null || userId == null) {
+			this.observer.next(false)
+		}
 		fetch('http://localhost:3000/auth/isConnect', {
 			method: 'POST',
 			body: JSON.stringify({ token, userId }),
@@ -23,9 +25,9 @@ export class AuthService {
 				'Authorization': `Bearer ${token}`
 			}
 		}).then((data: Response) => {
-			console.log('data is :', data)
 			data.json().then((value) => {
-				observer.next(value)
+				console.log('value is :', value)
+				this.observer.next(value)
 			})
 		})
 			.catch(error => { throw error })
@@ -68,16 +70,40 @@ export class AuthService {
 					this.observer.next(true)
 					return data.json()
 				})
-					.catch(error => rejects(error))
-
+				.catch(error => rejects(error))
+				
 				sessionStorage.setItem('token', dataFetch.token)
 				sessionStorage.setItem('userId', dataFetch.userId)
+				console.log('ON A MIS LE TOKEN');
+				this.isAuthObservable.subscribe()
 				resolve()
 			}
 		)
 	}
 
+	isConnect(): boolean | Promise<boolean> {
+		let token = sessionStorage.getItem('token')
+		let userId = sessionStorage.getItem('userId')
+		if (token == null || userId == null) return false
 
+		return new Promise<boolean>(
+			async (resolve, rejects) => {
+				let dataFetch = await fetch('http://localhost:3000/auth/isConnect', {
+					method: 'POST',
+					body: JSON.stringify({ token, userId }),
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${token}`
+					}
+				}).then((data: Response) => {
+					return data.json()
+				})
+					.catch(error => rejects(error))
+				return resolve(dataFetch)
+			}
+		)
+	}
 
 
 }

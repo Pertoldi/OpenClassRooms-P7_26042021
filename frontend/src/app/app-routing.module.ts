@@ -5,6 +5,7 @@ import { SignupComponent } from './auth/signup/signup.component';
 import { FourOhFourComponent } from './four-oh-four/four-oh-four.component';
 import { PostFormComponent } from './post-list/post-form/post-form.component';
 import { PostListComponent } from './post-list/post-list.component';
+import { PostModifyComponent } from './post-list/post-modify/post-modify.component';
 import { AuthGuardService } from './services/auth-guard.service'
 
 const routes: Routes = [
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'auth/signin', component: SigninComponent },
   { path: 'post-list', canActivate: [AuthGuardService], component: PostListComponent },
   { path: 'post-list/post-form', canActivate: [AuthGuardService], component: PostFormComponent },
+  { path: 'post-list/post-modify/:id', canActivate: [AuthGuardService], component: PostModifyComponent },
   { path: 'not-found', component: FourOhFourComponent },
 	{ path: '**', redirectTo: '/not-found' }
 ];

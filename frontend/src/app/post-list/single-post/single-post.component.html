@@ -1,6 +1,20 @@
 <li class="list-group-item my-4">
 	<div class="container-fluid postCard">
-		<h3>{{ postTitle }}</h3>
+		<div class="postCard__titleContainer">
+			<h3>{{ postTitle }}</h3>
+			<div (click)="onPostSetting(thisPost)" *ngIf="isMyPost" >
+				<i class="fas fa-circle"></i>
+				<i class="fas fa-circle"></i>
+				<i class="fas fa-circle"></i>
+				<div class="postCard__titleContainer--options" #thisPost (focusout)="onFocusOut(thisPost)">
+					<!-- TODO onfocusout display none -->
+					<ul class="list-group">
+						<li class="list-group-item list-group-item-action list-group-item-dark" (click)="onModify()">Modifier</li>
+						<li class="list-group-item list-group-item-action list-group-item-dark" (click)="onDelete()">Supprimer</li>
+					</ul>
+				</div>
+			</div>
+		</div>
 		<div class="postCard__profilContainer">
 			<img src="{{ postUserUrl }}" alt="photo_profil" class="postCard__imgProfil">
 			<div class="postCard__profilContainer--text">
@@ -12,10 +26,9 @@
 		<p class="postCard__description">{{ postDescription }}</p>
 		<hr>
 		<div class="postCard__iconInfoContainer"><a>{{ postLikes }} <i class="far fa-thumbs-up"></i> J'aimes</a>
-			<a> {{ postNbCommentaires }} <i class="far fa-comment-alt"></i> Commentaires</a></div>
+			<a> {{ postNbCommentaires }} <i class="far fa-comment-alt"></i> Commentaires</a>
+		</div>
 		<hr>
-		<!-- TODO les commentaires + un imput textarea pour ajouter des copmmentaires -->
-
-
+		<!-- TODO les commentaires + un imput textarea pour ajouter des commentaires -->
 	</div>
 </li>
