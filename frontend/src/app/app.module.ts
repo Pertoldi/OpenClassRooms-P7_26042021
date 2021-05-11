@@ -16,6 +16,8 @@ import { SinglePostComponent } from './post-list/single-post/single-post.compone
 import { PostFormComponent } from './post-list/post-form/post-form.component';
 import { PostsService } from './services/posts.service';
 import { PostModifyComponent } from './post-list/post-modify/post-modify.component';
+import { UserPageComponent } from './user-page/user-page.component';
+import { MessagesComponent } from './post-list/messages/messages.component';
 
 
 @NgModule({
@@ -29,6 +31,8 @@ import { PostModifyComponent } from './post-list/post-modify/post-modify.compone
     SinglePostComponent,
     PostFormComponent,
     PostModifyComponent,
+    UserPageComponent,
+    MessagesComponent,
   ],
   imports: [
     BrowserModule,

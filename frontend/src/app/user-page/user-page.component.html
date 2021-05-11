@@ -1,0 +1,41 @@
+<div class="container my-3">
+	<div class="row">
+
+		<div class="profil">
+			<img src="{{ UserUrl }}" alt="photo_profil" class="profil__image">
+			<div class="profil__text">
+				<div>Nom : {{ lastName }}</div>
+				<div>Prenom: {{ firstName }}</div>
+			</div>
+		</div>
+	</div>
+	<div class="row mt-3">
+		<button class="btn btn-primary" [hidden]="isOkToModif" (click)="onModifyProfil()">Modifier profil</button>
+		<button class="btn btn-danger ml-3" [hidden]="isOkToModif" (click)="OnDelete()">Supprimer le profil</button>
+	</div>
+</div>
+
+<div class="row" [hidden]="!isOkToModif">
+	<div class="col-sm-8 col-sm-offset-2">
+		<h2>Mise à jour du profil</h2>
+		<form enctype="multipart/form-data" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+			<div class="form-group">
+				<label for="lastName">Nom</label>
+				<input type="text" id="lastName" class="form-control" formControlName="lastName">
+			</div>
+			<div class="form-group">
+				<label for="firstName">Prénom</label>
+				<input type="text" id="firstName" class="form-control" formControlName="firstName">
+			</div>
+			<div class="form-group">
+				<label for="userImg">Image de profil</label>
+				<input type="file" id="userImg"
+					accept="image/png, image/jpeg, image/bmp, image/webp, image/svg+xml, image/gif" class="form-control"
+					formControlName="userImg" (change)="onFileAdded($event)" required>
+			</div>
+
+			<button class="btn btn-primary" type="submit">Modifier vos informations</button>
+		</form>
+		<p class="text-danger">{{ errorMessage }}</p>
+	</div>
+</div>

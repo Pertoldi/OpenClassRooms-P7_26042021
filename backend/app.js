@@ -7,6 +7,7 @@ const helmet = require('helmet')
 const toobusy = require('toobusy-js');
 require('dotenv').config()
 
+//Les routes
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post')
 

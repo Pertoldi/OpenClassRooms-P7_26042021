@@ -89,7 +89,7 @@ exports.modifyPostWithFile = (req, res, next) => {//TODO on doit dabord supprime
 			const title = reqObject.title
 			const description = reqObject.description
 			const newUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-		
+
 			db.query(`UPDATE posts SET title = '${title}', description = '${description}', url = '${newUrl}' WHERE id = ${req.params.id};`,
 				(error, results, fields) => {
 					if (error) {
@@ -101,8 +101,18 @@ exports.modifyPostWithFile = (req, res, next) => {//TODO on doit dabord supprime
 		}
 	})
 
+}
 
+exports.getComments = (req, res, next) => {
+	const userId = req.params.userId
+	const postId = req.params.postId
 
-
-	//TODO query avec supprésion du fichier + changement de fichier
+	db.query(`SELECT content , userId FROM comments WHERE (postId = "${postId}");`, (error, results, fields) => {
+		if (error) {
+			res.status(400).json({ error })
+		} else {
+			console.log('results is :', results)
+			res.status(200).json({results})
+		}
+	})
 }

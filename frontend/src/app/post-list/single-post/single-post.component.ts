@@ -21,6 +21,8 @@ export class SinglePostComponent implements OnInit {
 	@Input() userId!: number
 	@Input() postId!: number
 
+	messages: any = []
+
 	isMyPost: boolean = false
 	//TODO une variable isAdmin qui va requeter le serveur pour savoir si 'utilisateur est admin
 
@@ -31,9 +33,14 @@ export class SinglePostComponent implements OnInit {
 		if (parseInt(localId) == this.userId) {
 			this.isMyPost = true
 		}
+		this.getMessages(this.postId)
 	}
 
-	onPostSetting(_elem: HTMLElement) {
+	onPostSetting(_elem: HTMLElement) {//TODO changer le display avec un changement de classe
+		_elem instanceof HTMLElement
+		console.log(_elem instanceof HTMLElement)
+		console.log(_elem instanceof Element)
+
 		if (_elem.style.display == "none") {
 			_elem.style.display = "flex"
 		} else {
@@ -46,10 +53,28 @@ export class SinglePostComponent implements OnInit {
 	}
 
 	onDelete() {
-		this.postsService.deletePost(this.postId)
+		if (confirm('Etes vous sur de vouloir supprimer ce post ?')) {
+			this.postsService.deletePost(this.postId)
+		}
 	}
 
 	onFocusOut(_elem: HTMLElement) {
 		this.onPostSetting(_elem)
 	}
+
+	getMessages(postId: number) {
+		this.postsService.getMessages(postId).then(
+			(res) => {
+				console.log('first id dans le component is :', res.results[0].userId)
+				for ( let message of res.results) {
+					console.log('message is :', message)
+					this.messages.push(message)
+					console.log('messages is :', this.messages)
+				}
+
+			}
+		)
+	}
+
+	//TODO une requete qui va demander les messge au serveur et les afficher grace au message component
 }
