@@ -3,6 +3,7 @@
 	background-color: rgba(0, 0, 0, 0.125);
 	padding: 10px;
 	border-radius: 5px;
+	position: relative;
 	&__img {
 		width: 35px;
 		height: 35px;
@@ -11,10 +12,33 @@
 		border-radius: 50%;
 		margin-right: 10px;
 		&:hover {
-			//TODO au hover de l'image on montre le nom et le prénon du créateur du message
+			& ~ .messageContainer__userNames {
+				display: block;
+			}
 		}
+	}
+	&__userNames {
+		position: absolute;
+		display: none;
+		background-color: white;
+		border: 1px solid #e2e2e2;
+		padding: 3px;
+		border-radius: 3px;
+		top: -13px;
+		left: -12px;
 	}
 	&__text {
 		margin: 0;
 	}
+	&__iconEngrenage {
+		margin: 0 5px 0;
+		align-self: center;
+	}
+	&__settings{
+		display: none;
+	}
+}
+
+.display-message-settings{
+	display: block;
 }

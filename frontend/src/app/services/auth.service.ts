@@ -108,7 +108,7 @@ export class AuthService {
 		)
 	}
 
-	async getOneUser(id: string | null): Promise<any> {
+	async getOneUser(id: string | number | null): Promise<any> {
 		const token = sessionStorage.getItem('token')
 		return new Promise<any>((resolve, reject) => {
 			const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)

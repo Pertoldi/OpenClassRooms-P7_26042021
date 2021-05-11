@@ -1,5 +1,7 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MessagesService } from 'src/app/services/messages.service';
 import { PostsService } from 'src/app/services/posts.service';
 
 @Component({
@@ -17,16 +19,18 @@ export class SinglePostComponent implements OnInit {
 	@Input() postUrl!: string
 	@Input() postDescription!: string
 	@Input() postLikes!: number
-	@Input() postNbCommentaires!: number
 	@Input() userId!: number
 	@Input() postId!: number
 
+	messageForm!: FormGroup
+
 	messages: any = []
+	postNbCommentaires: number = 0
 
 	isMyPost: boolean = false
 	//TODO une variable isAdmin qui va requeter le serveur pour savoir si 'utilisateur est admin
 
-	constructor(private postsService: PostsService, private router: Router) { }
+	constructor(private postsService: PostsService, private router: Router, private messagesService: MessagesService, private formBuilder: FormBuilder) { }
 
 	ngOnInit(): void {
 		let localId: string = <string>sessionStorage.getItem('userId')
@@ -34,17 +38,20 @@ export class SinglePostComponent implements OnInit {
 			this.isMyPost = true
 		}
 		this.getMessages(this.postId)
+		this.initForm()
 	}
 
-	onPostSetting(_elem: HTMLElement) {//TODO changer le display avec un changement de classe
-		_elem instanceof HTMLElement
-		console.log(_elem instanceof HTMLElement)
-		console.log(_elem instanceof Element)
+	initForm() {
+		this.messageForm = this.formBuilder.group({
+			message: [null, Validators.required]
+		})
+	}
 
-		if (_elem.style.display == "none") {
-			_elem.style.display = "flex"
+	onPostSetting(elem: HTMLElement) {//TODO changer le display avec un changement de classe
+		if (elem.classList.contains("display-post-settings")) {
+			elem.classList.remove("display-post-settings")
 		} else {
-			_elem.style.display = "none"
+			elem.classList.add("display-post-settings")
 		}
 	}
 
@@ -58,22 +65,19 @@ export class SinglePostComponent implements OnInit {
 		}
 	}
 
-	onFocusOut(_elem: HTMLElement) {
-		this.onPostSetting(_elem)
-	}
-
 	getMessages(postId: number) {
-		this.postsService.getMessages(postId).then(
+		this.messagesService.getMessages(postId).then(
 			(res) => {
-				console.log('first id dans le component is :', res.results[0].userId)
-				for ( let message of res.results) {
-					console.log('message is :', message)
+				for (let message of res.results) {
 					this.messages.push(message)
-					console.log('messages is :', this.messages)
+					this.postNbCommentaires += 1
 				}
-
 			}
 		)
+	}
+
+	onSubmit() {
+
 	}
 
 	//TODO une requete qui va demander les messge au serveur et les afficher grace au message component

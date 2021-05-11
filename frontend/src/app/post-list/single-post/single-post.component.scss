@@ -65,3 +65,21 @@
 li {
 	box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.125);
 }
+
+.display-post-settings {
+	display: flex;
+}
+
+.messageFormulaire {
+	display: flex;
+	&__formGroup {
+		width: 90%;
+		margin-right: 3%;
+	}
+	&__Icon {
+		font-size: 2rem;
+		&:hover {
+			color: royalblue;
+		}
+	}
+}

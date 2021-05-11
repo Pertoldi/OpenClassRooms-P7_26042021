@@ -8,8 +8,9 @@ const toobusy = require('toobusy-js');
 require('dotenv').config()
 
 //Les routes
-const userRoutes = require('./routes/user');
+const userRoutes = require('./routes/user')
 const postRoutes = require('./routes/post')
+const messageRoutes = require('./routes/message')
 
 const app = express()
 
@@ -37,7 +38,8 @@ app.use(express.json())									   //On indique que les échanges se fonds en JS
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-app.use('/auth/', userRoutes);
-app.use('/post/', postRoutes);
+app.use('/auth/', userRoutes)
+app.use('/post/', postRoutes)
+app.use('/message/', messageRoutes)
 
 module.exports = app

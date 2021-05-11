@@ -1,7 +1,14 @@
-<div class="row my-2">
+<div class="row my-2" *ngIf="!isDelete">
 	<div class="messageContainer">
-		<img src="../../../assets/people-2388584_1280.png" alt="" class="messageContainer__img">
-		<!-- TODO création auto en envoyant les donnée dans le composant à la création de celui-ci -->
+		<img src="{{ userUrl }}" alt="" class="messageContainer__img">
+		<p class="messageContainer__userNames"> {{ firstName }} {{ lastName }}</p>
 		<p class="messageContainer__text">{{ content }}</p>
+		<i class="fas fa-cog messageContainer__iconEngrenage" *ngIf="isMyComment" (click)="onMessageSetting(thisIcon)"></i>
+		<div class="messageContainer__settings"  #thisIcon>
+			<ul class="list-group">
+				<li class="list-group-item list-group-item-action list-group-item-success" (click)="onModify()">Modifier</li>
+				<li class="list-group-item list-group-item-action list-group-item-danger" (click)="onDelete()">Supprimer</li>
+			</ul>
+		</div>
 	</div>
 </div>

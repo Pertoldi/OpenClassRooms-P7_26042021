@@ -102,17 +102,3 @@ exports.modifyPostWithFile = (req, res, next) => {//TODO on doit dabord supprime
 	})
 
 }
-
-exports.getComments = (req, res, next) => {
-	const userId = req.params.userId
-	const postId = req.params.postId
-
-	db.query(`SELECT content , userId FROM comments WHERE (postId = "${postId}");`, (error, results, fields) => {
-		if (error) {
-			res.status(400).json({ error })
-		} else {
-			console.log('results is :', results)
-			res.status(200).json({results})
-		}
-	})
-}

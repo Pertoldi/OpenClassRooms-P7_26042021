@@ -2,15 +2,16 @@
 	<div class="container-fluid postCard">
 		<div class="postCard__titleContainer">
 			<h3>{{ postTitle }}</h3>
-			<div (click)="onPostSetting(thisPost)" *ngIf="isMyPost" >
+			<div (click)="onPostSetting(thisPost)" *ngIf="isMyPost">
 				<i class="fas fa-circle"></i>
 				<i class="fas fa-circle"></i>
 				<i class="fas fa-circle"></i>
-				<div class="postCard__titleContainer--options" #thisPost (focusout)="onFocusOut(thisPost)">
-					<!-- TODO onfocusout display none -->
+				<div class="postCard__titleContainer--options" #thisPost>
 					<ul class="list-group">
-						<li class="list-group-item list-group-item-action list-group-item-dark" (click)="onModify()">Modifier</li>
-						<li class="list-group-item list-group-item-action list-group-item-dark" (click)="onDelete()">Supprimer</li>
+						<li class="list-group-item list-group-item-action list-group-item-success" (click)="onModify()">
+							Modifier</li>
+						<li class="list-group-item list-group-item-action list-group-item-danger" (click)="onDelete()">
+							Supprimer</li>
 					</ul>
 				</div>
 			</div>
@@ -25,13 +26,21 @@
 		<img src="{{ postUrl }}" alt="" class="postCard__img my-2">
 		<p class="postCard__description">{{ postDescription }}</p>
 		<hr>
+		<!-- //TODO une requetes pour avoir la liste des personnes qui ont aimé et le nb de like du post -->
 		<div class="postCard__iconInfoContainer"><a>{{ postLikes }} <i class="far fa-thumbs-up"></i> J'aimes</a>
 			<a> {{ postNbCommentaires }} <i class="far fa-comment-alt"></i> Commentaires</a>
 		</div>
 		<hr>
-		<!-- POUR afficher les messages faire un autre composants avec l'id de l'user et l'id du post -->
-		<!-- TODO les commentaires + un imput textarea pour ajouter des commentaires -->
-		<app-messages *ngFor="let message of messages" [userId]="message.userId" [content]="message.content"></app-messages>
-		<!-- *ngFor= blabla pour afficher tous les messages du post -->
+		<app-messages *ngFor="let message of messages" [userId]="message.userId" [content]="message.content"
+			[messageId]="message.id"></app-messages>
+
+		<!-- TODO un imput textarea pour ajouter des commentaires -->
+		<form [formGroup]="messageForm" (ngSubmit)="onSubmit()" class="mt-3 messageFormulaire">
+			<div class="form-group messageFormulaire__formGroup">
+				<input type="text" id="message" class="form-control" placeholder="Nouveau message">
+			</div>
+			<i class="fas fa-angle-double-right messageFormulaire__Icon"></i>
+		</form>
+
 	</div>
 </li>

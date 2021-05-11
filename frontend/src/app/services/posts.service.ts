@@ -137,18 +137,4 @@ export class PostsService {
 		})
 	}
 
-	async getMessages( postId: number):Promise<any> {
-		return new Promise((resolve, reject) => {
-			const token = sessionStorage.getItem('token')
-			const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
-			this.http.get(`http://localhost:3000/post/comments/${String(postId)}`, { 'headers': headers }).subscribe(
-				(res) => {
-					resolve(res)
-				},
-				(error) => {
-					reject(error)
-				}
-			)
-		})
-	}
 }
