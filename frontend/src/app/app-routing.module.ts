@@ -1,12 +1,13 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { SigninComponent } from './auth/signin/signin.component';
-import { SignupComponent } from './auth/signup/signup.component';
-import { FourOhFourComponent } from './four-oh-four/four-oh-four.component';
-import { PostFormComponent } from './post-list/post-form/post-form.component';
-import { PostListComponent } from './post-list/post-list.component';
-import { PostModifyComponent } from './post-list/post-modify/post-modify.component';
+import { NgModule } from '@angular/core'
+import { RouterModule, Routes } from '@angular/router'
+import { SigninComponent } from './auth/signin/signin.component'
+import { SignupComponent } from './auth/signup/signup.component'
+import { FourOhFourComponent } from './four-oh-four/four-oh-four.component'
+import { PostFormComponent } from './post-list/post-form/post-form.component'
+import { PostListComponent } from './post-list/post-list.component'
+import { PostModifyComponent } from './post-list/post-modify/post-modify.component'
 import { AuthGuardService } from './services/auth-guard.service'
+import { UserPageComponent } from './user-page/user-page.component'
 
 const routes: Routes = [
   { path: '', component: SigninComponent },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'post-list', canActivate: [AuthGuardService], component: PostListComponent },
   { path: 'post-list/post-form', canActivate: [AuthGuardService], component: PostFormComponent },
   { path: 'post-list/post-modify/:id', canActivate: [AuthGuardService], component: PostModifyComponent },
+  { path: 'user', canActivate: [AuthGuardService], component: UserPageComponent },
   { path: 'not-found', component: FourOhFourComponent },
 	{ path: '**', redirectTo: '/not-found' }
 ];

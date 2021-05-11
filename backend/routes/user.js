@@ -1,10 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const bouncer = require('express-bouncer')(500, 10000, 5)
 const userCtrl = require('../controllers/user')
+const auth = require('../middleware/auth')
+const multer = require('../config/multer-config')
 
 router.post('/signup', userCtrl.signup)
-router.post('/signin',bouncer.block , userCtrl.signin)
+router.post('/signin', userCtrl.signin)
 router.post('/isConnect', userCtrl.isConnect)
+router.get('/:id', auth, userCtrl.getOneUser)
+router.put('/:id', auth, multer, userCtrl.modifyUser)
+router.delete('/:id', auth, userCtrl.deleteUser)
 
 module.exports = router

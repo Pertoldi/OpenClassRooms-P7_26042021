@@ -38,15 +38,14 @@ export class PostsService {
 
 	async getOnePost(id: number | string): Promise<Post> {
 		try {
-			let token = sessionStorage.getItem('token')
+			const token = sessionStorage.getItem('token')
 			let data = await (await fetch(`http://localhost:3000/post/${id}`, {
 				method: "GET",
 				headers: {
 					'Authorization': `Bearer ${token}`
 				}
 			})).json()
-			let post: Post = data.result
-			console.log('post is :', data.result[0].title)
+			let post: Post = data.result[0]
 			return post
 		} catch (error) {
 			throw error
@@ -55,23 +54,23 @@ export class PostsService {
 
 	async createNewPost(title: string, description: string, file: File) {
 		return new Promise((resolve, reject) => {
-			let token = sessionStorage.getItem('token')
-			let userId = sessionStorage.getItem('userId')
+			const token = sessionStorage.getItem('token')
+			const userId = sessionStorage.getItem('userId')
 
-			const BodyFormData = new FormData()
-			BodyFormData.append('data', JSON.stringify({ title: title, description: description, userId: userId }))
-			if (file == null) {
-				console.log('FILE IS NOT UPLOADING !')
+			const bodyFormData = new FormData()
+			bodyFormData.append('data', JSON.stringify({ title: title, description: description, userId: userId }))
+			if (file == null || file == undefined) {
+				console.log('FILE DID NOT UPLOADED !')
 				reject('No file found !')
 			}
 			else {
-				BodyFormData.append('file', file)
+				bodyFormData.append('file', file)
 			}
 
 			//WITH HTTPCLIENT
 			const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
 
-			this.http.post('http://localhost:3000/post/', BodyFormData, { 'headers': headers }).subscribe(
+			this.http.post('http://localhost:3000/post/', bodyFormData, { 'headers': headers }).subscribe(
 				(res) => {
 					this.getPosts()
 					this.router.navigate(['/post-list'])
@@ -86,10 +85,8 @@ export class PostsService {
 
 	async deletePost(id: number) {
 		return new Promise<any>((resolve, reject) => {
-			let token = sessionStorage.getItem('token')
+			const token = sessionStorage.getItem('token')
 			const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
-			let param = new HttpParams()
-			param = param.append('id', `${id}`)// { params: param }
 			this.http.delete(`http://localhost:3000/post/${String(id)}`, { 'headers': headers }).subscribe(
 				(res) => {
 					this.getPosts()
@@ -105,11 +102,9 @@ export class PostsService {
 	async modifyPost(id: string, title: string, description: string, file: File | undefined) {
 		return new Promise<any>((resolve, reject) => {
 
-			let token = sessionStorage.getItem('token')
-			let param = new HttpParams()
-			param = param.append('id', `${id}`)
+			const token = sessionStorage.getItem('token')
 
-			//Request pour changer uniquement titre et desc
+			//Request pour changer uniquement le titre et la desc
 			if (file == undefined || file == null) {
 				const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`).set('Accept', 'application/json').set('Content-Type', 'application/json')
 				this.http.put(`http://localhost:3000/post/${String(id)}`, JSON.stringify({ title, description }), { 'headers': headers }).subscribe(
@@ -139,6 +134,21 @@ export class PostsService {
 					}
 				)
 			}
+		})
+	}
+
+	async getMessages( postId: number):Promise<any> {
+		return new Promise((resolve, reject) => {
+			const token = sessionStorage.getItem('token')
+			const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+			this.http.get(`http://localhost:3000/post/comments/${String(postId)}`, { 'headers': headers }).subscribe(
+				(res) => {
+					resolve(res)
+				},
+				(error) => {
+					reject(error)
+				}
+			)
 		})
 	}
 }

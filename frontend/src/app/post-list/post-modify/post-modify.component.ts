@@ -16,11 +16,8 @@ export class PostModifyComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private postsService: PostsService) { }
 
-  async ngOnInit(): Promise<any> {
-    //TODO requete sur le post en question + ajouter les values dans le formulaire et envoyer en put
+  ngOnInit(): void {
     this.initForm()
-
-
   }
 
   async initForm() {
@@ -31,27 +28,16 @@ export class PostModifyComponent implements OnInit {
     })
     //On ajoute les valeurs du post dans leurs placeholders
     let urlParam = this.getURLParam()
-    await this.postsService.getOnePost(urlParam).then((post) => {
-      console.log('data is :', post)
-
-      const getKeyValue = < U extends keyof T,T extends object>(key: U) => (obj: T) =>
-      obj[key];
-      const getPostTitle = getKeyValue<keyof Post, Post>("title")(post);
-      console.log('getPostTitle is :', getPostTitle)
-      
+    await this.postsService.getOnePost(urlParam).then((data) => {
       this.postFormModify = this.formBuilder.group({
-        title: [`${post.title}`, Validators.required],
-        description: [`${post.description}`, Validators.required],
+        title: [`${data.title}`, Validators.required],
+        description: [`${data.description}`, Validators.required],
         postImg: [null, Validators.required]
       })
-    }).catch((error) => {throw error})
-    
-
-   //TODO post dans post service est bon mais data is undefined
-    //On ajoute les valeurs dans les placeholders correspondant
+    }).catch((error) => { throw error })
   }
 
-  getURLParam():string {
+  getURLParam(): string {
     let url = window.location.href
     let urls = url.split('/')
     url = urls[urls.length - 1]
@@ -60,17 +46,17 @@ export class PostModifyComponent implements OnInit {
 
   onSubmit() {
     const title = this.postFormModify.get('title')!.value
-		const description = this.postFormModify.get('description')!.value
+    const description = this.postFormModify.get('description')!.value
     const id = this.getURLParam()
 
-		this.postsService.modifyPost(id ,title, description, this.file)
+    this.postsService.modifyPost(id, title, description, this.file)
   }
 
   onFileAdded(event: Event | any) {
-		if (event == null) { console.log('FILE IS NOT UPLOADED !') }
-		else {
-			this.file = event.target.files[0]
-		}
+    if (event == null) { console.log('FILE IS NOT UPLOADED !') }
+    else {
+      this.file = event.target.files[0]
+    }
   }
 
 }

@@ -29,6 +29,9 @@
 			<a> {{ postNbCommentaires }} <i class="far fa-comment-alt"></i> Commentaires</a>
 		</div>
 		<hr>
+		<!-- POUR afficher les messages faire un autre composants avec l'id de l'user et l'id du post -->
 		<!-- TODO les commentaires + un imput textarea pour ajouter des commentaires -->
+		<app-messages *ngFor="let message of messages" [userId]="message.userId" [content]="message.content"></app-messages>
+		<!-- *ngFor= blabla pour afficher tous les messages du post -->
 	</div>
 </li>

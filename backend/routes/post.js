@@ -11,5 +11,6 @@ router.post('/', auth, multer, postCtrl.addPost)
 router.delete('/:id', auth, postCtrl.deletePost)
 router.put('/:id', auth, postCtrl.modifyPost)
 router.put('/file/:id', auth, multer, postCtrl.modifyPostWithFile)
+router.get('/comments/:postId', auth, postCtrl.getComments)
 
 module.exports = router

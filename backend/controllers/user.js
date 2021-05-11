@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const fs = require('fs')
 
 const db = require('../config/mysql-config.js')
 
@@ -62,11 +63,11 @@ exports.signin = (req, res, next) => {
 		let isOk = true
 		let checkSpecialCaractere = /^[^@&"'`~^#{}<>_=\[\]()!:;,?./§$£€*\+]+$/
 		let checkSpecialCaractereForEmail = /^[^&"'`~^#{}<>_=\[\]()!:;,?/§$£€*\+]+$/
-	
+
 		//CTRL formulaire cote server
 		if (!checkSpecialCaractereForEmail.test(reqEmail)) isOk = false
 		if (!checkSpecialCaractere.test(password)) isOk = false
-	
+
 		if (isOk) {
 			db.query(`
 				SELECT email,id,password
@@ -77,7 +78,7 @@ exports.signin = (req, res, next) => {
 						res.status(401).json({ error: 'User not found !' })
 					} else if (results == null | results[0] == undefined) {
 						res.status(401).json({ error: 'User not found !' })
-					}else {
+					} else {
 						bcrypt.compare(password, results[0].password)
 							.then(valid => {
 								if (!valid) return res.status(401).json({ error: 'Mot de passe incorrect !' })
@@ -114,6 +115,86 @@ exports.isConnect = (req, res, next) => {
 	} catch (error) {
 		res.status(401).json(false)
 	}
+}
+
+exports.getOneUser = (req, res, next) => {
+	db.query(`SELECT firstName, lastName, photo_URL FROM users WHERE id = ${req.params.id}`, (error, result, field) => {
+		if (error) {
+			res.status(400).json({ error })
+		} else {
+			res.status(200).json(result)
+		}
+	})
+}
+
+exports.modifyUser = (req, res, next) => {
+
+	reqObject = JSON.parse(req.body.data)
+
+	if (req.file == undefined) {
+		db.query(`UPDATE users SET firstName = '${reqObject.firstName}', lastName = '${reqObject.lastName}'  WHERE id = ${req.params.id};`, (error, results, fields) => {
+			if (error) {
+				res.status(400).json({ error })
+			} else {
+				res.status(200).json('User modifiee !')
+			}
+		})
+	} else {//SI on a un fichier on supprime l'ancien (si != null) et on enregistre le nouveau
+		db.query(`SELECT photo_URL FROM users WHERE id = ${req.params.id};`, (error, results, fields) => {
+			if (error) {
+				res.status(400).json({ error })
+			} else {
+				let url = results[0].photo_URL
+				if (url != null) {
+					url = url.split('/')
+					url = url[url.length - 1]
+					fs.unlink(`images/${url}`, (err) => {
+						if (err) throw err;
+						console.log('Ancienne image -> successfully deleted !');
+					})
+				}
+				const newUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+				db.query(`UPDATE users SET firstName = '${reqObject.firstName}', lastName = '${reqObject.lastName}', photo_URL = '${newUrl}'  WHERE id = ${req.params.id};`, (error, results, fields) => {
+					if (error) {
+						res.status(400).json({ error })
+					} else {
+						res.status(200).json('User modifiee !')
+					}
+				})
+			}
+		})
+
+
+	}
+	//
+}
+
+exports.deleteUser = (req, res, next) => {
+	db.query(`SELECT photo_Url FROM users  WHERE id = ${req.params.id}`, (error, result, field) => {
+		if (error) {
+			throw error
+		} else {
+			console.log(result);
+			userUrl = result[0].photo_Url
+			console.log('userUrl is :', userUrl)
+			if (userUrl != null) {//On doit supprimer la photo de profil si il y en a une
+				let imageURL = userUrl.split('/')
+				imageURL = imageURL[imageURL.length - 1]
+				fs.unlink(`images/${imageURL}`, (error) => {
+					if (error) {
+						throw error
+					}
+				})
+			}
+			db.query(`DELETE FROM users WHERE id = ${req.params.id}`, (error, result, field) => {
+				if (error) {
+					res.status(400).json({ error })
+				} else {
+					res.status(200).json('Utilisateur supprimé !')
+				}
+			})
+		}
+	})
 }
 
 //TODO AJOUTER: une route isAdmin pour voir si la personne connecter est admin.
