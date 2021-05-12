@@ -31,6 +31,7 @@
 			<a> {{ postNbCommentaires }} <i class="far fa-comment-alt"></i> Commentaires</a>
 		</div>
 		<hr>
+		
 		<app-messages *ngFor="let message of messages" [userId]="message.userId" [content]="message.content"
 			[messageId]="message.id"></app-messages>
 

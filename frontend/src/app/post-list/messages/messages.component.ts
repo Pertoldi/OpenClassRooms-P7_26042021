@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { MessagesService } from 'src/app/services/messages.service';
@@ -21,14 +22,20 @@ export class MessagesComponent implements OnInit {
 
 	isMyComment: boolean = false
 	isDelete: boolean = false
+	IsSettingOpen: boolean = false
+	isInModification: boolean = false
 
-	constructor(private authService: AuthService, private messagesService: MessagesService, private router: Router) { }
+
+	modifyMessageForm!: FormGroup
+
+	constructor(private authService: AuthService, private messagesService: MessagesService, private router: Router, private formBuilder: FormBuilder) { }
 
 	ngOnInit(): void {
 		//afficher l'image et le nom et prénom au hover de l'image
 		//TODO + afficher une icon pour suppr ou modif les messages
 		this.isMycomment()
 		this.getUserInfo(this.userId)
+		this.initForm()
 	}
 
 	getUserInfo(id: number) {
@@ -49,25 +56,44 @@ export class MessagesComponent implements OnInit {
 		}
 	}
 
-	onMessageSetting(elem: HTMLElement) {
-		if (elem.classList.contains("display-message-settings")) {
-			elem.classList.remove("display-message-settings")
+	initForm(): void {
+		this.modifyMessageForm = this.formBuilder.group({
+			message: [this.content, Validators.required]
+		})
+	}
+
+	onMessageSetting(): void {
+		if (this.IsSettingOpen) {
+			this.IsSettingOpen = false
+			this.isInModification = false
 		} else {
-			elem.classList.add("display-message-settings")
+			this.IsSettingOpen = true
 		}
 	}
 
-	onModify() {
-
+	onModify(): void {
+		if (this.isInModification == false) {
+			this.isInModification = true
+		} else {
+			this.isInModification = false
+		}
 	}
 
-	onDelete() {
+	onDelete(): void {
 		if (confirm('Etes vous sur de vouloir supprimer ce post ?')) {
 			this.messagesService.deleteMessage(this.messageId).then(() => {
 				this.isDelete = true
-			}
-			)
-
+			})
 		}
+	}
+
+	onSubmitModifyForm() {
+		const newContent = this.modifyMessageForm.get('message')!.value
+		console.log('newContent is :', newContent)
+		this.messagesService.modifyMessage(this.messageId, newContent).then(() => {
+			this.content = newContent
+			this.onMessageSetting()
+		}
+		)
 	}
 }

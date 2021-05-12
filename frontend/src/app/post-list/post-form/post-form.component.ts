@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { PostsService } from 'src/app/services/posts.service';
 
 export type FileEventTarget = EventTarget & { files: FileList };

@@ -80,5 +80,4 @@ export class SinglePostComponent implements OnInit {
 
 	}
 
-	//TODO une requete qui va demander les messge au serveur et les afficher grace au message component
 }

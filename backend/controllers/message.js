@@ -15,11 +15,23 @@ exports.getComments = (req, res, next) => {
 exports.deleteOneComment = (req, res, next) => {
 	const id = req.params.id
 
-	db.query(`DELETE FROM comments WHERE id = '${id}'`, (error, results, fields) => {
+	db.query(`DELETE FROM comments WHERE id = '${id}';`, (error, results, fields) => {
 		if (error) {
 			res.status(400).json({ error })
 		} else {
 			res.status(200).json('Message delete !')
+		}
+	})
+}
+
+exports.modifyOneMessage = (req, res, next) => {
+	const id = req.params.id
+
+	db.query(`UPDATE comments SET content = '${req.body.content}' WHERE id = ${id};`, (error, results, fields) => {
+		if (error) {
+			res.status(400).json({ error })
+		} else {
+			res.status(200).json('Message modifiee !')
 		}
 	})
 }

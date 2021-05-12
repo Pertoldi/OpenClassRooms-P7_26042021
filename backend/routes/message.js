@@ -8,5 +8,6 @@ const app = require('../app');
 
 router.get('/:postId', auth, messageCtrl.getComments)
 router.delete('/:id', messageCtrl.deleteOneComment)
+router.put('/:id', messageCtrl.modifyOneMessage)
 
 module.exports = router

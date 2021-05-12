@@ -4,6 +4,10 @@
 	padding: 10px;
 	border-radius: 5px;
 	position: relative;
+	&__flex {
+		display: flex;
+		flex-direction: column;
+	}
 	&__img {
 		width: 35px;
 		height: 35px;
@@ -34,8 +38,15 @@
 		margin: 0 5px 0;
 		align-self: center;
 	}
-	&__settings{
-		display: none;
+	&__form {
+		&--icon {
+			font-size: 1.5rem;
+			margin-left: 5px;
+			padding-top: 8px;
+			&:hover {
+				color: royalblue;
+			}
+		}
 	}
 }
 
