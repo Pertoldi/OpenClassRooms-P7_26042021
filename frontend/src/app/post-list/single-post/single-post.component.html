@@ -26,21 +26,24 @@
 		<img src="{{ postUrl }}" alt="" class="postCard__img my-2">
 		<p class="postCard__description">{{ postDescription }}</p>
 		<hr>
-		<!-- //TODO une requetes pour avoir la liste des personnes qui ont aimé et le nb de like du post -->
-		<div class="postCard__iconInfoContainer"><a>{{ postLikes }} <i class="far fa-thumbs-up"></i> J'aimes</a>
-			<a> {{ postNbCommentaires }} <i class="far fa-comment-alt"></i> Commentaires</a>
+
+		<div class="postCard__iconInfoContainer">
+			<a class="postCard__iconInfoContainer--likes" (click)="onLike()"> {{ postNbLikes }} <i class="far fa-thumbs-up"></i> J'aimes</a>
+			<div class="postCard__iconInfoContainer--usersLike">
+				<span *ngFor="let user of postLikesUsersListe">{{user.firstName}} {{user.lastName}} <br></span>
+			</div>
+			<span> {{ postNbCommentaires }} <i class="far fa-comment-alt"></i> Commentaires</span>
 		</div>
 		<hr>
-		
-		<app-messages *ngFor="let message of messages" [userId]="message.userId" [content]="message.content"
-			[messageId]="message.id"></app-messages>
 
-		<!-- TODO un imput textarea pour ajouter des commentaires -->
-		<form [formGroup]="messageForm" (ngSubmit)="onSubmit()" class="mt-3 messageFormulaire">
+		<app-messages *ngFor="let message of messages" [userId]="message.userId" [content]="message.content"
+			[messageId]="message.id" (oneLessMessage)=onDeleteMessage()></app-messages>
+
+		<form [formGroup]="messageForm" class="mt-3 messageFormulaire">
 			<div class="form-group messageFormulaire__formGroup">
-				<input type="text" id="message" class="form-control" placeholder="Nouveau message">
+				<textarea formControlName="newMessage" rows="1" id="newMessage" class="form-control" placeholder="Nouveau message"></textarea>
 			</div>
-			<i class="fas fa-angle-double-right messageFormulaire__Icon"></i>
+			<i class="fas fa-angle-double-right messageFormulaire__Icon" (click)="onNewMessage()"></i>
 		</form>
 
 	</div>

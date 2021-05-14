@@ -27,9 +27,13 @@ exports.addPost = (req, res, next) => {
 	const userId = reqObject.userId
 	const url = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
 
-	db.query(`INSERT INTO posts (userId, date, url, title, description) VALUES (${userId}, NOW(), "${url}", "${title}", "${description}");`,
+	db.query(`INSERT INTO posts (userId, date, url, title, description) VALUES (${userId}, NOW(), '${url}', '${title}', '${description}');`,
 		(error, results, fields) => {
 			if (error) {
+				fs.unlink(`images/${req.file.filename}`,
+					(err) => {
+						if (err) throw err
+					})
 				res.status(400).json({ error })
 			} else {
 				res.status(200).json('Nouveau post creer !')
@@ -42,7 +46,6 @@ exports.deletePost = (req, res, next) => {
 		if (error) {
 			res.status(400).json({ error })
 		} else {
-			console.log(result[0].url)
 			let imageURL = result[0].url.split('/')
 			imageURL = imageURL[imageURL.length - 1]
 			fs.unlink(`images/${imageURL}`, () => {
@@ -72,7 +75,7 @@ exports.modifyPost = (req, res, next) => {
 
 }
 
-exports.modifyPostWithFile = (req, res, next) => {//TODO on doit dabord supprimer l'ime avant de la changer
+exports.modifyPostWithFile = (req, res, next) => {//TODO on doit dabord supprimer l'image avant de la changer
 	db.query(`SELECT url FROM posts WHERE id = ${req.params.id}`, (error, results, fields) => {
 		if (error) {
 			res.status(400).json({ error })
@@ -82,7 +85,7 @@ exports.modifyPostWithFile = (req, res, next) => {//TODO on doit dabord supprime
 			url = url[url.length - 1]
 			fs.unlink(`images/${url}`, (err) => {
 				if (err) throw err;
-				console.log('Ancienne image -> successfully deleted !');
+				console.log('Old image -> successfully deleted !');
 			})
 
 			const reqObject = JSON.parse(req.body.data)
@@ -93,6 +96,11 @@ exports.modifyPostWithFile = (req, res, next) => {//TODO on doit dabord supprime
 			db.query(`UPDATE posts SET title = '${title}', description = '${description}', url = '${newUrl}' WHERE id = ${req.params.id};`,
 				(error, results, fields) => {
 					if (error) {
+						// si il y a une erreur, on doit supprimer l'image qui a été enregistré via le middleware multer
+						fs.unlink(`images/${req.file.filename}`,
+						(err) => {
+							if (err) throw err
+						})
 						res.status(400).json({ error })
 					} else {
 						res.status(200).json('Post modifiee !')

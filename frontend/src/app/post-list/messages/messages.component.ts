@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
@@ -15,6 +15,8 @@ export class MessagesComponent implements OnInit {
 	@Input() userId!: number
 	@Input() content!: string
 	@Input() messageId!: number
+
+	@Output() oneLessMessage = new EventEmitter();
 
 	firstName: string = ''
 	lastName: string = ''
@@ -80,9 +82,10 @@ export class MessagesComponent implements OnInit {
 	}
 
 	onDelete(): void {
-		if (confirm('Etes vous sur de vouloir supprimer ce post ?')) {
+		if (confirm('Etes vous sur de vouloir supprimer ce message ?')) {
 			this.messagesService.deleteMessage(this.messageId).then(() => {
 				this.isDelete = true
+				this.oneLessMessage.emit()
 			})
 		}
 	}
@@ -93,7 +96,7 @@ export class MessagesComponent implements OnInit {
 		this.messagesService.modifyMessage(this.messageId, newContent).then(() => {
 			this.content = newContent
 			this.onMessageSetting()
-		}
-		)
+		})
 	}
+
 }
