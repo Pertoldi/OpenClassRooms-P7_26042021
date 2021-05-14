@@ -11,6 +11,7 @@ require('dotenv').config()
 const userRoutes = require('./routes/user')
 const postRoutes = require('./routes/post')
 const messageRoutes = require('./routes/message')
+const likeRoutes = require('./routes/like')
 
 const app = express()
 
@@ -41,5 +42,6 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/auth/', userRoutes)
 app.use('/post/', postRoutes)
 app.use('/message/', messageRoutes)
+app.use('/like', likeRoutes)
 
 module.exports = app

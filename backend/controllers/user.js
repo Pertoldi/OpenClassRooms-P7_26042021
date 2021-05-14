@@ -156,6 +156,10 @@ exports.modifyUser = (req, res, next) => {
 				const newUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
 				db.query(`UPDATE users SET firstName = '${reqObject.firstName}', lastName = '${reqObject.lastName}', photo_URL = '${newUrl}'  WHERE id = ${req.params.id};`, (error, results, fields) => {
 					if (error) {
+						fs.unlink(`images/${req.file.filename}`,
+						(err) => {
+							if (err) throw err
+						})
 						res.status(400).json({ error })
 					} else {
 						res.status(200).json('User modifiee !')

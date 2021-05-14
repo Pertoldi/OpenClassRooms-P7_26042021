@@ -57,6 +57,9 @@ export class PostsService {
 			const token = sessionStorage.getItem('token')
 			const userId = sessionStorage.getItem('userId')
 
+			title = title.split('\"').join('\\"').split("\'").join("\\'")
+			description = description.split('\"').join('\\"').split("\'").join("\\'")
+
 			const bodyFormData = new FormData()
 			bodyFormData.append('data', JSON.stringify({ title: title, description: description, userId: userId }))
 			if (file == null || file == undefined) {
@@ -103,6 +106,8 @@ export class PostsService {
 		return new Promise<any>((resolve, reject) => {
 
 			const token = sessionStorage.getItem('token')
+			title = title.split('\"').join('\\"').split("\'").join("\\'")
+			description = description.split('\"').join('\\"').split("\'").join("\\'")
 
 			//Request pour changer uniquement le titre et la desc
 			if (file == undefined || file == null) {
