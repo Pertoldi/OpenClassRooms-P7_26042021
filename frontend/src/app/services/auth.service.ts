@@ -11,7 +11,7 @@ export class AuthService {
 
 	observer: any;
 
-	isAuthObservable = new Observable((observer) => {
+	isAuthObservable = new Observable((observer) => {			//Pour savoir si la personne est connecté ou pas
 		this.observer = observer;
 		let token = sessionStorage.getItem('token')
 		let userId = sessionStorage.getItem('userId')
@@ -19,21 +19,7 @@ export class AuthService {
 		if (token == null || userId == null) {
 			this.observer.next(false)
 		}
-		fetch('http://localhost:3000/auth/isConnect', {
-			method: 'POST',
-			body: JSON.stringify({ token, userId }),
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${token}`
-			}
-		}).then((data: Response) => {
-			data.json().then((value) => {
-				console.log('value of observable is :', value)
-				this.observer.next(value)
-			})
-		})
-			.catch(error => { throw error })
+		this.observer.next(this.isConnect())						//this.isConnect renvoie un booleen
 	})
 
 	constructor(private http: HttpClient, private router: Router, private postsService: PostsService) { }
@@ -41,46 +27,35 @@ export class AuthService {
 	createNewUser(firstName: string, lastName: string, email: string, password: string) {
 		return new Promise<void>(
 			(resolve, reject) => {
-				fetch('http://localhost:3000/auth/signup', {
-					method: 'POST',
-					body: JSON.stringify({ firstName, lastName, email, password }),
-					headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json'
-					}
-				})
-					.then(() => {
-						resolve()
-					})
-					.catch((error) => {
+				const headers = new HttpHeaders().set('Accept', 'application/json').set('Content-Type', 'application/json')
+				this.http.post('http://localhost:3000/auth/signup', JSON.stringify({ firstName, lastName, email, password }), { 'headers': headers }).subscribe(
+					(res: any) => {
+						resolve(res)
+					},
+					(error) => {
 						reject(error)
-					})
+					}
+				)
 			}
 		)
 	}
 
 	signInUser(email: string, password: string) {
-		return new Promise<void>(
-			async (resolve, rejects) => {
-				let dataFetch = await fetch('http://localhost:3000/auth/signin', {
-					method: 'POST',
-					body: JSON.stringify({ email, password }),
-					headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json'
-					}
-				}).then((data: Response) => {
+		return new Promise<any>((resolve, reject) => {
+			const headers = new HttpHeaders().set('Accept', 'application/json').set('Content-Type', 'application/json')
+			this.http.post('http://localhost:3000/auth/signin', JSON.stringify({ email, password }), { 'headers': headers }).subscribe(
+				(res: any) => {
+					sessionStorage.setItem('token', res.token)
+					sessionStorage.setItem('userId', res.userId)
 					this.observer.next(true)
-					return data.json()
-				})
-					.catch(error => rejects(error))
-
-				sessionStorage.setItem('token', dataFetch.token)
-				sessionStorage.setItem('userId', dataFetch.userId)
-				console.log('ON A MIS LE TOKEN');
-				this.isAuthObservable.subscribe()
-				resolve()
-			}
+					console.log('Observeur passe à true');
+					resolve(res)
+				},
+				(error) => {
+					reject(error)
+				}
+			)
+		}
 		)
 	}
 
@@ -90,25 +65,21 @@ export class AuthService {
 		if (token == null || userId == null) return false
 
 		return new Promise<boolean>(
-			async (resolve, rejects) => {
-				let dataFetch = await fetch('http://localhost:3000/auth/isConnect', {
-					method: 'POST',
-					body: JSON.stringify({ token, userId }),
-					headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${token}`
+			(resolve, reject) => {
+				const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`).set('Accept', 'application/json').set('Content-Type', 'application/json')
+				this.http.post('http://localhost:3000/auth/isConnect', JSON.stringify({ token, userId }), { 'headers': headers }).subscribe(
+					(res) => {
+						resolve(true)
+					},
+					(error) => {
+						reject(false)
 					}
-				}).then((data: Response) => {
-					return data.json()
-				})
-					.catch(error => rejects(error))
-				return resolve(dataFetch)
+				)
 			}
 		)
 	}
 
-	async getOneUser(id: string | number | null): Promise<any> {
+	getOneUser(id: string | number | null): Promise<any> {
 		const token = sessionStorage.getItem('token')
 		return new Promise<any>((resolve, reject) => {
 			const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
@@ -157,7 +128,7 @@ export class AuthService {
 				(res) => {
 					sessionStorage.removeItem('token')
 					sessionStorage.removeItem('userId')
-					//TODO lier isAuth observable à faux ici aussi
+					this.observer.next(false)
 					this.router.navigate(['/auth/signup'])
 					resolve(res)
 				},
