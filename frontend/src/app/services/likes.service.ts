@@ -7,8 +7,6 @@ import { Subject } from 'rxjs';
 })
 export class LikesService {
 
-	// likes:any = []
-	// likeSubject = new Subject<any[]>()
 
 	constructor(private http: HttpClient) { 
 		

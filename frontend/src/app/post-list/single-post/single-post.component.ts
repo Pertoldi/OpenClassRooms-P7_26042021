@@ -28,7 +28,7 @@ export class SinglePostComponent implements OnInit {
 	messages: any = []
 	postNbCommentaires: number = 0
 	postNbLikes: number = 0
-	postLikesUsersListe: Array<any> = []											//Cette liste est afficher au hover des j'aimes; taille max = 9
+	postLikesUsersListe: Array<any> = []											//Cette liste est affiché au hover des j'aimes; taille max = 9
 
 	isMyPost: boolean = false
 
@@ -112,7 +112,7 @@ export class SinglePostComponent implements OnInit {
 		this.postNbCommentaires -= 1
 	}
 
-	getLikes(postId: number) {
+	getLikes(postId: number) {													// Renvoie les nom des personnes qui ont likés
 		this.likesService.getLikes(postId).then(
 			(res: any) => {
 				for (let like of res.results) {
@@ -121,7 +121,7 @@ export class SinglePostComponent implements OnInit {
 						this.postLikesUsersListe.push(like)
 					}
 				}
-				if (this.postLikesUsersListe.length == 9) {
+				if (this.postLikesUsersListe.length >= 9) {				// La Liste de nom qui s'affiche ç une taille max de 9 nom
 					this.postLikesUsersListe.push({ firstName: "...", lastName: "..." })
 				}
 			})
