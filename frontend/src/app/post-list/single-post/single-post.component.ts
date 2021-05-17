@@ -1,6 +1,7 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 import { LikesService } from 'src/app/services/likes.service';
 import { MessagesService } from 'src/app/services/messages.service';
 import { PostsService } from 'src/app/services/posts.service';
@@ -19,7 +20,7 @@ export class SinglePostComponent implements OnInit {
 	@Input() postDate!: Date
 	@Input() postUrl!: string
 	@Input() postDescription!: string
-	@Input() userId!: number
+	@Input() postUserId!: number
 	@Input() postId!: number
 
 	messageForm!: FormGroup
@@ -27,25 +28,36 @@ export class SinglePostComponent implements OnInit {
 	messages: any = []
 	postNbCommentaires: number = 0
 	postNbLikes: number = 0
-	postLikesUsersListe: Array<any> = []					//Cette liste est afficher au hover des j'aimes; taille max = 9
+	postLikesUsersListe: Array<any> = []											//Cette liste est afficher au hover des j'aimes; taille max = 9
 
 	isMyPost: boolean = false
-	//TODO une variable isAdmin qui va requeter le serveur pour savoir si 'utilisateur est admin
 
-	constructor(private postsService: PostsService, private router: Router, private messagesService: MessagesService, private formBuilder: FormBuilder, private likesService: LikesService) { }
+	constructor(private postsService: PostsService, private router: Router, private messagesService: MessagesService, private formBuilder: FormBuilder, private likesService: LikesService, private authService: AuthService) { }
 
 	ngOnInit(): void {
 		this.messages = []
 		let localId: string = <string>sessionStorage.getItem('userId')
-		if (parseInt(localId) == this.userId) {
+		if (parseInt(localId) == this.postUserId) {								//Si l'utilisateur est celui qui à créé le post, il peut le modifier ou le supprimer
 			this.isMyPost = true
 		}
+
+		this.isAdmin()																		//Si l'utilisateur est Admin, il peut modifier ou supprimer le post
 		this.postNbCommentaires = 0
 		this.getMessages(this.postId)
 		this.postNbLikes = 0
 		this.postLikesUsersListe = []
 		this.getLikes(this.postId)
 		this.initForm()
+	}
+
+	isAdmin() {
+		this.authService.isAdmin().then(												
+			(isAdmin:boolean) => {
+				if (isAdmin) {
+					this.isMyPost = true
+				}
+			}
+		)
 	}
 
 	initForm() {

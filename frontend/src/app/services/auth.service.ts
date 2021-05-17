@@ -139,4 +139,21 @@ export class AuthService {
 		})
 	}
 
+	isAdmin() {
+		return new Promise<boolean>((resolve, reject) => {
+			const token = sessionStorage.getItem('token')
+			const userId = sessionStorage.getItem('userId')
+			
+			const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`).set('Accept', 'application/json').set('Content-Type', 'application/json')
+			this.http.post('http://localhost:3000/auth/isAdmin', JSON.stringify({ userId }), { 'headers': headers }).subscribe(
+				(res:any) => {
+					resolve(res.isAdmin)
+				},
+				(error) => {
+					reject(error)
+				}
+			)
+		})
+	}
+
 }

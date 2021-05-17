@@ -36,7 +36,7 @@
 		</div>
 		<hr>
 
-		<app-messages *ngFor="let message of messages" [userId]="message.userId" [content]="message.content"
+		<app-messages *ngFor="let message of messages" [messageUserId]="message.userId" [content]="message.content"
 			[messageId]="message.id" (oneLessMessage)=onDeleteMessage()></app-messages>
 
 		<form [formGroup]="messageForm" class="mt-3 messageFormulaire">
