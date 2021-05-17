@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const fs = require('fs')
 
 const db = require('../config/mysql-config.js')
+const { json } = require('body-parser')
 
 exports.signup = (req, res, next) => {
 	let firstName = req.body.firstName
@@ -157,9 +158,9 @@ exports.modifyUser = (req, res, next) => {
 				db.query(`UPDATE users SET firstName = '${reqObject.firstName}', lastName = '${reqObject.lastName}', photo_URL = '${newUrl}'  WHERE id = ${req.params.id};`, (error, results, fields) => {
 					if (error) {
 						fs.unlink(`images/${req.file.filename}`,
-						(err) => {
-							if (err) throw err
-						})
+							(err) => {
+								if (err) throw err
+							})
 						res.status(400).json({ error })
 					} else {
 						res.status(200).json('User modifiee !')
@@ -201,4 +202,18 @@ exports.deleteUser = (req, res, next) => {
 	})
 }
 
-//TODO AJOUTER: une route isAdmin pour voir si la personne connecter est admin.
+exports.isAdmin = (req, res, next) => {
+	userId = JSON.parse(req.body.userId)
+	// on recoit userId
+	db.query(`SELECT isAdmin FROM users WHERE id = ${userId};`, (error, result, field) => {
+		if (error) {
+			res.status(400).json({ error })
+		} else {
+			let isAdmin = false
+			if (result[0].isAdmin == "1") {
+				isAdmin = true
+			}
+			res.status(200).json({ isAdmin })
+		}
+	})
+}

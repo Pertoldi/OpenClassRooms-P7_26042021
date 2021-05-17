@@ -1,12 +1,18 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class LikesService {
 
-	constructor(private http: HttpClient) { }
+	// likes:any = []
+	// likeSubject = new Subject<any[]>()
+
+	constructor(private http: HttpClient) { 
+		
+	}
 
 	getLikes(postId: number) {
 		console.log('postId is :', postId)

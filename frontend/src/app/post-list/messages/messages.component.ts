@@ -12,7 +12,7 @@ import { MessagesService } from 'src/app/services/messages.service';
 })
 export class MessagesComponent implements OnInit {
 
-	@Input() userId!: number
+	@Input() messageUserId!: number
 	@Input() content!: string
 	@Input() messageId!: number
 
@@ -33,15 +33,20 @@ export class MessagesComponent implements OnInit {
 	constructor(private authService: AuthService, private messagesService: MessagesService, private router: Router, private formBuilder: FormBuilder) { }
 
 	ngOnInit(): void {
-		//afficher l'image et le nom et prénom au hover de l'image
-		//TODO + afficher une icon pour suppr ou modif les messages
 		this.isMycomment()
-		this.getUserInfo(this.userId)
+		this.authService.isAdmin().then(												//Si l'utilisateur est Admin, il peut modifier ou supprimer le message
+			(isAdmin: boolean) => {
+				if (isAdmin) {
+					this.isMyComment = true
+				}
+			}
+		)
+		this.getUserInfo(this.messageUserId)
 		this.initForm()
 	}
 
 	getUserInfo(id: number) {
-		this.authService.getOneUser(this.userId).then(
+		this.authService.getOneUser(this.messageUserId).then(
 			(data) => {
 				this.firstName = data[0].firstName
 				this.lastName = data[0].lastName
@@ -53,7 +58,7 @@ export class MessagesComponent implements OnInit {
 	}
 	isMycomment(): void {
 		const actualUserId = sessionStorage.getItem('userId')
-		if (actualUserId == String(this.userId)) {	//Si l'utilisateur actuel est celui qui écrit le post alors il a acces a la modif/supp de celui-ci
+		if (actualUserId == String(this.messageUserId)) {	//Si l'utilisateur actuel est celui qui écrit le post alors il a acces a la modif/supp de celui-ci
 			this.isMyComment = true
 		}
 	}
