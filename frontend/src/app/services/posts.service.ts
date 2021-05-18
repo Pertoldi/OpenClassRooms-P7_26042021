@@ -13,7 +13,10 @@ export class PostsService {
 	postsSubject = new Subject<Post[]>()
 
 	constructor(private http: HttpClient, private router: Router) {
-		this.getPosts()
+		let token = sessionStorage.getItem('token')
+		if (token) {
+			this.getPosts()
+		}
 	}
 
 	emitPosts() {
@@ -79,6 +82,7 @@ export class PostsService {
 			this.http.post('http://localhost:3000/post/', bodyFormData, { 'headers': headers }).subscribe(
 				(res) => {
 					this.getPosts()
+					this.emitPosts()
 					this.router.navigate(['/post-list'])
 					resolve(res)
 				},
@@ -119,6 +123,7 @@ export class PostsService {
 				this.http.put(`http://localhost:3000/post/${String(id)}`, JSON.stringify({ title, description }), { 'headers': headers }).subscribe(
 					(res) => {
 						this.getPosts()
+						this.emitPosts()
 						this.router.navigate(['/post-list'])
 						resolve(res)
 					},

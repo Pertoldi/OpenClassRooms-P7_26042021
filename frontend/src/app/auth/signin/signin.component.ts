@@ -35,6 +35,7 @@ export class SigninComponent implements OnInit {
 		this.authService.signInUser(email, password).then(
 			() => {
 				this.authService.observer.next(true)
+				this.authService.initIsAuthSubject()
 				this.router.navigate(['/post-list'])
 				
 			},

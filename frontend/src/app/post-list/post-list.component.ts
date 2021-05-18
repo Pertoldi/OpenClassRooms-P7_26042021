@@ -9,7 +9,7 @@ import { PostsService } from '../services/posts.service';
 	templateUrl: './post-list.component.html',
 	styleUrls: ['./post-list.component.scss']
 })
-export class PostListComponent implements OnInit {
+export class PostListComponent implements OnInit, OnDestroy {
 
 	posts: Array<any> = [
 
@@ -28,7 +28,7 @@ export class PostListComponent implements OnInit {
 		this.postsService.emitPosts()
 	}
 
-	onDestroy():void {
+	ngOnDestroy():void {
 		this.postsSubscription.unsubscribe()
 	}
 

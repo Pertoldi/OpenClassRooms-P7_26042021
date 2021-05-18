@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { PostsService } from './posts.service';
 
 @Injectable({
@@ -22,7 +22,22 @@ export class AuthService {
 		this.observer.next(this.isConnect())						//this.isConnect renvoie un booleen
 	})
 
-	constructor(private http: HttpClient, private router: Router, private postsService: PostsService) { }
+	//--------------SUBJECT---------------------------------------
+	isAuth = false
+	isAuthSubject = new Subject<boolean>()
+
+	constructor(private http: HttpClient, private router: Router, private postsService: PostsService) { 
+		this.initIsAuthSubject()													//Initialisation du isAuthSubject
+	}
+
+	async initIsAuthSubject() {
+		 this.isAuth = await this.isConnect()
+		this.emitAuthSubject()
+	}
+
+	emitAuthSubject() {
+		this.isAuthSubject.next(this.isAuth)
+	}
 
 	createNewUser(firstName: string, lastName: string, email: string, password: string) {
 		return new Promise<void>(
@@ -62,16 +77,21 @@ export class AuthService {
 	isConnect(): boolean | Promise<boolean> {
 		let token = sessionStorage.getItem('token')
 		let userId = sessionStorage.getItem('userId')
-		if (token == null || userId == null) return false
+		if (token == null || userId == null) {
+			this.isAuth = false
+			return false	
+		}
 
 		return new Promise<boolean>(
 			(resolve, reject) => {
 				const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`).set('Accept', 'application/json').set('Content-Type', 'application/json')
 				this.http.post('http://localhost:3000/auth/isConnect', JSON.stringify({ token, userId }), { 'headers': headers }).subscribe(
 					(res) => {
+						this.isAuth = true
 						resolve(true)
 					},
 					(error) => {
+						this.isAuth = false
 						reject(false)
 					}
 				)
