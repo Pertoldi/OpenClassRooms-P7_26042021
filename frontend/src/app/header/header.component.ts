@@ -1,5 +1,6 @@
 import { Component, Injectable, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -13,15 +14,19 @@ import { AuthService } from '../services/auth.service';
 export class HeaderComponent implements OnInit, OnDestroy {
 
 	isAuth: boolean = false
+	isAuthSubscription!: Subscription
 
 	constructor(private authService: AuthService, private router: Router) { }
 
-	async ngOnInit() {
-		this.authService.isAuthObservable.subscribe((isAuth:any) => {	//On souscrit à l'observable pour garder la persistance de session
-			this.isAuth = isAuth
-		}, (error) => {
-			throw error
-		})
+	ngOnInit() {
+
+		this.isAuthSubscription = this.authService.isAuthSubject.subscribe(
+			(isAuth: boolean) => {
+				this.isAuth = isAuth
+			}, (error) => {
+				throw error
+			}
+		)
 	}
 
 	onSignOut(): void {
@@ -36,6 +41,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		this.isAuth = false
 		sessionStorage.removeItem('token')
 		sessionStorage.removeItem('userId')
+		this.isAuthSubscription.unsubscribe()
 	}
+
 
 }
