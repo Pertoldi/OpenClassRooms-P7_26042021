@@ -9,29 +9,15 @@ import { PostsService } from './posts.service';
 })
 export class AuthService {
 
-	observer: any;
-
-	isAuthObservable = new Observable((observer) => {			//Pour savoir si la personne est connecté ou pas
-		this.observer = observer;
-		let token = sessionStorage.getItem('token')
-		let userId = sessionStorage.getItem('userId')
-
-		if (token == null || userId == null) {
-			this.observer.next(false)
-		}
-		this.observer.next(this.isConnect())						//this.isConnect renvoie un booleen
-	})
-
-	//--------------SUBJECT---------------------------------------
 	isAuth = false
-	isAuthSubject = new Subject<boolean>()
+	isAuthSubject = new Subject<boolean>()										
 
-	constructor(private http: HttpClient, private router: Router, private postsService: PostsService) { 
+	constructor(private http: HttpClient, private router: Router, private postsService: PostsService) {
 		this.initIsAuthSubject()													//Initialisation du isAuthSubject
 	}
 
 	async initIsAuthSubject() {
-		 this.isAuth = await this.isConnect()
+		this.isAuth = await this.isConnect()
 		this.emitAuthSubject()
 	}
 
@@ -62,8 +48,8 @@ export class AuthService {
 				(res: any) => {
 					sessionStorage.setItem('token', res.token)
 					sessionStorage.setItem('userId', res.userId)
-					this.observer.next(true)
-					console.log('Observeur passe à true');
+					this.isAuth = true
+					this.emitAuthSubject()
 					resolve(res)
 				},
 				(error) => {
@@ -79,7 +65,8 @@ export class AuthService {
 		let userId = sessionStorage.getItem('userId')
 		if (token == null || userId == null) {
 			this.isAuth = false
-			return false	
+			this.emitAuthSubject()
+			return false
 		}
 
 		return new Promise<boolean>(
@@ -88,10 +75,12 @@ export class AuthService {
 				this.http.post('http://localhost:3000/auth/isConnect', JSON.stringify({ token, userId }), { 'headers': headers }).subscribe(
 					(res) => {
 						this.isAuth = true
+						this.emitAuthSubject()
 						resolve(true)
 					},
 					(error) => {
 						this.isAuth = false
+						this.emitAuthSubject()
 						reject(false)
 					}
 				)
@@ -148,7 +137,8 @@ export class AuthService {
 				(res) => {
 					sessionStorage.removeItem('token')
 					sessionStorage.removeItem('userId')
-					this.observer.next(false)
+					this.isAuth = false
+					this.emitAuthSubject()
 					this.router.navigate(['/auth/signup'])
 					resolve(res)
 				},
@@ -163,10 +153,10 @@ export class AuthService {
 		return new Promise<boolean>((resolve, reject) => {
 			const token = sessionStorage.getItem('token')
 			const userId = sessionStorage.getItem('userId')
-			
+
 			const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`).set('Accept', 'application/json').set('Content-Type', 'application/json')
 			this.http.post('http://localhost:3000/auth/isAdmin', JSON.stringify({ userId }), { 'headers': headers }).subscribe(
-				(res:any) => {
+				(res: any) => {
 					resolve(res.isAdmin)
 				},
 				(error) => {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Post } from '../models/post.model';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -11,7 +11,6 @@ export class PostsService {
 
 	posts: Post[] = []
 	postsSubject = new Subject<Post[]>()
-
 	constructor(private http: HttpClient, private router: Router) {
 		let token = sessionStorage.getItem('token')
 		if (token) {

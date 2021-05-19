@@ -33,21 +33,15 @@ export class SigninComponent implements OnInit {
 		const password = this.signInForm.get('password')!.value
 
 		this.authService.signInUser(email, password).then(
-			() => {
-				this.authService.observer.next(true)
-				this.authService.initIsAuthSubject()
+			async () => {
+				await this.authService.initIsAuthSubject()
 				this.router.navigate(['/post-list'])
-				
 			},
 			(error) => {
 				this.errorMessage = error
 			}
 		)
 
-		this.authService.isAuthObservable.subscribe(() => {
-		}, (error) => {
-			throw error
-		})
 	}
 
 }
