@@ -16,7 +16,7 @@ export class MessagesComponent implements OnInit {
 	@Input() content!: string
 	@Input() messageId!: number
 
-	@Output() oneLessMessage = new EventEmitter();
+	@Output() oneLessMessage = new EventEmitter()					//Output, pour pouvoir transmettre l'information au parent
 
 	firstName: string = ''
 	lastName: string = ''
@@ -27,8 +27,8 @@ export class MessagesComponent implements OnInit {
 	IsSettingOpen: boolean = false
 	isInModification: boolean = false
 
-
 	modifyMessageForm!: FormGroup
+	errorMessage!: string
 
 	constructor(private authService: AuthService, private messagesService: MessagesService, private router: Router, private formBuilder: FormBuilder) { }
 
@@ -101,6 +101,8 @@ export class MessagesComponent implements OnInit {
 		this.messagesService.modifyMessage(this.messageId, newContent).then(() => {
 			this.content = newContent
 			this.onMessageSetting()
+		}).catch((error) => {
+			this.errorMessage = error.error.message
 		})
 	}
 

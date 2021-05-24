@@ -60,7 +60,9 @@ export class UserPageComponent implements OnInit {
 	onSubmit() {
 		const lastName = this.userForm.get('lastName')!.value
 		const firstName = this.userForm.get('firstName')!.value
-		this.authService.modifyOneUser(lastName, firstName, this.file)
+		this.authService.modifyOneUser(lastName, firstName, this.file).catch((error) => {
+			this.errorMessage = error.error.message
+		})
 	}
 
 	OnDelete() {

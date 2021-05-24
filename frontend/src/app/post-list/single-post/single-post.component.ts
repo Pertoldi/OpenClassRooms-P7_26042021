@@ -24,6 +24,7 @@ export class SinglePostComponent implements OnInit {
 	@Input() postId!: number
 
 	messageForm!: FormGroup
+	errorMessage!: string
 
 	messages: any = []
 	postNbCommentaires: number = 0
@@ -51,8 +52,8 @@ export class SinglePostComponent implements OnInit {
 	}
 
 	isAdmin() {
-		this.authService.isAdmin().then(												
-			(isAdmin:boolean) => {
+		this.authService.isAdmin().then(
+			(isAdmin: boolean) => {
 				if (isAdmin) {
 					this.isMyPost = true
 				}
@@ -103,7 +104,10 @@ export class SinglePostComponent implements OnInit {
 			alert('Votre message est vide !')
 		} else {
 			this.messagesService.createNewMessage(this.postId, String(userId), content).then(() => {
+				this.errorMessage = ''
 				this.ngOnInit()
+			}).catch((error) => {
+				this.errorMessage = error.error.message
 			})
 		}
 	}
@@ -129,7 +133,6 @@ export class SinglePostComponent implements OnInit {
 
 	onLike() {
 		this.likesService.createLike(this.postId).then((result) => {
-			console.log('result is :', result)
 			this.ngOnInit()
 		}).catch((err) => {
 			throw err
