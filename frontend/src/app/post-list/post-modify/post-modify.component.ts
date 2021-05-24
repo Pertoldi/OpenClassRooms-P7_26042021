@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Post } from 'src/app/models/post.model';
 import { PostsService } from 'src/app/services/posts.service';
 
@@ -14,7 +15,7 @@ export class PostModifyComponent implements OnInit {
   errorMessage!: string
   file: File | undefined = undefined
 
-  constructor(private formBuilder: FormBuilder, private postsService: PostsService) { }
+  constructor(private formBuilder: FormBuilder, private postsService: PostsService, private router:Router) { }
 
   ngOnInit(): void {
     this.initForm()
@@ -49,7 +50,11 @@ export class PostModifyComponent implements OnInit {
     const description = this.postFormModify.get('description')!.value
     const id = this.getURLParam()
 
-    this.postsService.modifyPost(id, title, description, this.file)
+    this.postsService.modifyPost(id, title, description, this.file).then(() => {
+      this.router.navigate(['/post-list'])
+    }).catch((error) => {
+      this.errorMessage = error.error.message
+    })
   }
 
   onFileAdded(event: Event | any) {
