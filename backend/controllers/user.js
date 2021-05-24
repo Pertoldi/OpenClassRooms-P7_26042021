@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken')
 const fs = require('fs')
 
 const db = require('../config/mysql-config.js')
-const { json } = require('body-parser')
 
 exports.signup = (req, res, next) => {
 	let firstName = req.body.firstName
@@ -57,7 +56,6 @@ exports.signup = (req, res, next) => {
 }
 
 exports.signin = (req, res, next) => {
-
 	try {
 		let reqEmail = req.body.email
 		let password = req.body.password
@@ -105,18 +103,27 @@ exports.signin = (req, res, next) => {
 
 exports.isConnect = (req, res, next) => {
 	try {
-		const token = req.headers.authorization.split(' ')[1]
-		const decodedToken = jwt.verify(token, `${process.env.TOKEN_SECRET}`)
-		const userId = decodedToken.userId;
-		if (req.body.userId && req.body.userId == userId) {
-			res.status(200).json(true)
-		} else {
+		//CTRL formulaire cote server
+		let checkSpecialCaractere = /^[^@&"'`~^#{}<>_=\[\]()!:;,?./§$£€*\+]+$/
+		if (!checkSpecialCaractere.test(req.body.userId)) {
 			res.status(401).json(false)
+		}
+
+		else {
+			const token = req.headers.authorization.split(' ')[1]
+			const decodedToken = jwt.verify(token, `${process.env.TOKEN_SECRET}`)
+			const userId = decodedToken.userId;
+			if (req.body.userId && req.body.userId == userId) {
+				res.status(200).json(true)
+			} else {
+				res.status(401).json(false)
+			}
 		}
 	} catch (error) {
 		res.status(401).json(false)
 	}
 }
+
 
 exports.getOneUser = (req, res, next) => {
 	db.query(`SELECT firstName, lastName, photo_URL FROM users WHERE id = ${req.params.id}`, (error, result, field) => {
@@ -132,46 +139,53 @@ exports.modifyUser = (req, res, next) => {
 
 	reqObject = JSON.parse(req.body.data)
 
-	if (req.file == undefined) {
-		db.query(`UPDATE users SET firstName = '${reqObject.firstName}', lastName = '${reqObject.lastName}'  WHERE id = ${req.params.id};`, (error, results, fields) => {
-			if (error) {
-				res.status(400).json({ error })
-			} else {
-				res.status(200).json('User modifiee !')
-			}
-		})
-	} else {//SI on a un fichier on supprime l'ancien (si != null) et on enregistre le nouveau
-		db.query(`SELECT photo_URL FROM users WHERE id = ${req.params.id};`, (error, results, fields) => {
-			if (error) {
-				res.status(400).json({ error })
-			} else {
-				let url = results[0].photo_URL
-				if (url != null) {
-					url = url.split('/')
-					url = url[url.length - 1]
-					fs.unlink(`images/${url}`, (err) => {
-						if (err) throw err;
-						console.log('Ancienne image -> successfully deleted !');
+	//CTRL formulaire cote server
+	let isOk = true
+	let checkSpecialCaractere = /^[^@&"'`~^#{}<>_=\[\]()!:;,?./§$£€*\+]+$/
+	if (!checkSpecialCaractere.test(reqObject.firstName)) isOk = false
+	if (!checkSpecialCaractere.test(reqObject.lastName)) isOk = false
+
+	if (isOk) {// Si le CRTL formulaire est OK alors on fait la suite
+		if (req.file == undefined) {//Si pas de file on update le nom et le prénom
+			db.query(`UPDATE users SET firstName = '${reqObject.firstName}', lastName = '${reqObject.lastName}'  WHERE id = ${req.params.id};`, (error, results, fields) => {
+				if (error) {
+					res.status(400).json({ error })
+				} else {
+					res.status(200).json('User modifiee !')
+				}
+			})
+		} else {//SI on a un fichier on supprime l'ancien (si != undefined) et on enregistre le nouveau fichier
+			db.query(`SELECT photo_URL FROM users WHERE id = ${req.params.id};`, (error, results, fields) => {
+				if (error) {
+					res.status(400).json({ error })
+				} else {
+					let url = results[0].photo_URL
+					if (url != null) {
+						url = url.split('/')
+						url = url[url.length - 1]
+						fs.unlink(`images/${url}`, (err) => {
+							if (err) throw err;
+							console.log('Ancienne image -> successfully deleted !');
+						})
+					}
+					const newUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+					db.query(`UPDATE users SET firstName = '${reqObject.firstName}', lastName = '${reqObject.lastName}', photo_URL = '${newUrl}'  WHERE id = ${req.params.id};`, (error, results, fields) => {
+						if (error) {
+							fs.unlink(`images/${req.file.filename}`,
+								(err) => {
+									if (err) throw err
+								})
+							res.status(400).json({ error })
+						} else {
+							res.status(200).json('User modifiee !')
+						}
 					})
 				}
-				const newUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-				db.query(`UPDATE users SET firstName = '${reqObject.firstName}', lastName = '${reqObject.lastName}', photo_URL = '${newUrl}'  WHERE id = ${req.params.id};`, (error, results, fields) => {
-					if (error) {
-						fs.unlink(`images/${req.file.filename}`,
-							(err) => {
-								if (err) throw err
-							})
-						res.status(400).json({ error })
-					} else {
-						res.status(200).json('User modifiee !')
-					}
-				})
-			}
-		})
-
-
+			})
+		}
+	} else {
+		res.status(400).json({ message: 'Il y a une erreur dans les données !' })
 	}
-	//
 }
 
 exports.deleteUser = (req, res, next) => {
@@ -204,16 +218,21 @@ exports.deleteUser = (req, res, next) => {
 
 exports.isAdmin = (req, res, next) => {
 	userId = JSON.parse(req.body.userId)
-	// on recoit userId
-	db.query(`SELECT isAdmin FROM users WHERE id = ${userId};`, (error, result, field) => {
-		if (error) {
-			res.status(400).json({ error })
-		} else {
-			let isAdmin = false
-			if (result[0].isAdmin == "1") {
-				isAdmin = true
+
+	let checkSpecialCaractere = /^[^@&"'`~^#{}<>_=\[\]()!:;,?./§$£€*\+]+$/
+	if (!checkSpecialCaractere.test(userId)) {
+		res.status(401).json(false)
+	} else {
+		db.query(`SELECT isAdmin FROM users WHERE id = ${userId};`, (error, result, field) => {
+			if (error) {
+				res.status(400).json({ error })
+			} else {
+				let isAdmin = false
+				if (result[0].isAdmin == "1") {
+					isAdmin = true
+				}
+				res.status(200).json({ isAdmin })
 			}
-			res.status(200).json({ isAdmin })
-		}
-	})
+		})
+	}
 }

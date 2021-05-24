@@ -33,9 +33,11 @@ export class PostFormComponent implements OnInit {
 		const title = this.postForm.get('title')!.value
 		const description = this.postForm.get('description')!.value
 
-		this.postsService.createNewPost(title, description, this.file)
-		//le service revoie sur le compoenent post-list
-
+		this.postsService.createNewPost(title, description, this.file).catch(
+			(error) => {
+				this.errorMessage = error.error.message
+			}
+		)
 	}
 
 	onFileAdded(event: Event | any) {

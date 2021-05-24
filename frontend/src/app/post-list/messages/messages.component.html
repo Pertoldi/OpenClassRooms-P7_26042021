@@ -4,14 +4,16 @@
 		<img src="{{ userUrl }}" alt="Photo de Profil" class="messageContainer__img">
 
 		<span class="messageContainer__userNames"> {{ firstName }} {{ lastName }}</span>
-		
+
 		<div class="messageContainer__flex">
 			<p class="messageContainer__text">{{ content }}</p>
 			<form [formGroup]="modifyMessageForm" class="mt-3 messageContainer__form" *ngIf="isInModification">
 				<div class="messageFormulaire__formGroup">
-					<textarea formControlName="message" rows="1" class="form-control messageContainer__form--input"></textarea>
+					<textarea formControlName="message" rows="1"
+						class="form-control messageContainer__form--input"></textarea>
 				</div>
 				<i class="fas fa-angle-double-right messageContainer__form--icon" (click)="onSubmitModifyForm()"></i>
+				<p class="text-danger">{{ errorMessage }}</p>
 			</form>
 		</div>
 

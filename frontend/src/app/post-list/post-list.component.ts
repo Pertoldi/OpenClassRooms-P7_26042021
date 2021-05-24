@@ -20,13 +20,12 @@ export class PostListComponent implements OnInit, OnDestroy {
 	constructor(private postsService: PostsService, private router: Router) { }
 
 	ngOnInit():void {
-
+		this.posts = []
 		this.postsSubscription = this.postsService.postsSubject.subscribe(
 			(posts: Post[]) => (
 				this.posts = posts
 			)
 		)
-		this.postsService.getPosts()
 		this.postsService.emitPosts()
 	}
 

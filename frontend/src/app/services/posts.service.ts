@@ -23,8 +23,10 @@ export class PostsService {
 	}
 
 	getPosts() {
+		console.log('ON GET LES POSTS');
+		this.posts = []
+		
 		return new Promise<void>((resolve, reject) => {
-			this.posts = []
 			const token = sessionStorage.getItem('token')
 			const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
 			this.http.get('http://localhost:3000/post/all', { 'headers': headers }).subscribe(
@@ -138,6 +140,7 @@ export class PostsService {
 				this.http.put(`http://localhost:3000/post/file/${String(id)}`, BodyFormData, { 'headers': headers }).subscribe(
 					(res) => {
 						this.getPosts()
+						this.emitPosts()
 						this.router.navigate(['/post-list'])
 						resolve(res)
 					},

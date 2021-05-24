@@ -23,7 +23,6 @@ exports.createLike = (req, res, next) => {
 			res.status(400).json({ error })
 		} else {
 			if (results.length == 0) {													// Si il n'y a aucun like on ajoute le like
-
 				db.query(`INSERT INTO likes (userId, postId) VALUES (${userId}, ${postId})`, (error, results, fields) => {
 					if (error) {
 						res.status(400).json({ error })

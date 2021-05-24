@@ -44,6 +44,7 @@
 				<textarea formControlName="newMessage" rows="1" id="newMessage" class="form-control" placeholder="Nouveau message"></textarea>
 			</div>
 			<i class="fas fa-angle-double-right messageFormulaire__Icon" (click)="onNewMessage()"></i>
+			<p class="text-danger">{{ errorMessage }}</p>
 		</form>
 
 	</div>

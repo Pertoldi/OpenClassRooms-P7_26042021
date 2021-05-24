@@ -39,7 +39,7 @@ export class SignupComponent implements OnInit {
 			this.router.navigate(['/auth/signin'])
 		})
 		.catch( (error) => {
-			this.errorMessage = error
+			this.errorMessage = error.error.message
 		})
 	} 
 }
