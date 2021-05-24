@@ -114,7 +114,7 @@ exports.modifyPostWithFile = (req, res, next) => {
 	if (!checkSpecialCaractere.test(description)) isOk = false
 
 	if (isOk) {
-		//On doit dabord supprimer l'image avant de la changer
+		//On doit dabord supprimer l'ancienne l'image avant d'enregistrer l'URL de la nouvelle dans la base
 		db.query(`SELECT url FROM posts WHERE id = ${req.params.id}`, (error, results, fields) => {
 			if (error) {
 				res.status(400).json({ error })
@@ -143,7 +143,11 @@ exports.modifyPostWithFile = (req, res, next) => {
 					})
 			}
 		})
-	} else {
+	} else {// On doit supprimer la nouvelle image car la requete n'arrive pas à bout
+		fs.unlink(`images/${req.file.filename}`,
+			(err) => {
+				if (err) throw err
+			})
 		res.status(400).json({ message: 'Il y a une erreur dans les données !' })
 	}
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { PostsService } from 'src/app/services/posts.service';
 
 export type FileEventTarget = EventTarget & { files: FileList };
@@ -15,7 +16,7 @@ export class PostFormComponent implements OnInit {
 	errorMessage!: string
 	file!: File
 
-	constructor(private formBuilder: FormBuilder, private postsService: PostsService) { }
+	constructor(private formBuilder: FormBuilder, private postsService: PostsService, private router: Router) { }
 
 	ngOnInit(): void {
 		this.initForm()
@@ -33,7 +34,10 @@ export class PostFormComponent implements OnInit {
 		const title = this.postForm.get('title')!.value
 		const description = this.postForm.get('description')!.value
 
-		this.postsService.createNewPost(title, description, this.file).catch(
+		this.postsService.createNewPost(title, description, this.file).then(() => {
+			this.router.navigate(['/post-list'])
+		})
+		.catch(
 			(error) => {
 				this.errorMessage = error.error.message
 			}

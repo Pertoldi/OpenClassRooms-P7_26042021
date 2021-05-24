@@ -50,7 +50,6 @@ export class PostsService {
 			const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
 			this.http.get(`http://localhost:3000/post/${id}`, { 'headers': headers }).subscribe(
 				(res:any) => {
-					console.log('res is :', res.result[0])
 					resolve(res.result[0])
 				},
 				(error) => {
@@ -84,7 +83,6 @@ export class PostsService {
 				(res) => {
 					this.getPosts()
 					this.emitPosts()
-					this.router.navigate(['/post-list'])
 					resolve(res)
 				},
 				(error) => {
@@ -125,7 +123,6 @@ export class PostsService {
 					(res) => {
 						this.getPosts()
 						this.emitPosts()
-						this.router.navigate(['/post-list'])
 						resolve(res)
 					},
 					(error) => {
@@ -141,7 +138,6 @@ export class PostsService {
 					(res) => {
 						this.getPosts()
 						this.emitPosts()
-						this.router.navigate(['/post-list'])
 						resolve(res)
 					},
 					(error) => {
