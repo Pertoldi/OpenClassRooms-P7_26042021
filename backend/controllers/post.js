@@ -2,8 +2,7 @@ const db = require('../config/mysql-config.js')
 const fs = require('fs')
 
 exports.getAllPosts = (req, res, next) => {
-	//renvoie la liste des posts avec (id, auteur (id, nom, prénom, img), date, titre, url, decription) //les ids sont à enregistrer pour modifier/supprimer
-	//La gestion des images n'est pas encore faite.
+	//renvoie la liste des posts avec (id, auteur (id, nom, prénom, img), date, titre, url, decription)
 	db.query('SELECT posts.id, users.id AS userId, users.firstName, users.lastName, users.photo_URL AS userUrl, posts.date, posts.url AS postUrl, posts.title, posts.description FROM posts JOIN users ON users.id = posts.userId ORDER BY posts.date DESC;', (error, result, fields) => {
 		if (error) res.status(400).json({ error })
 		res.status(200).json({ result })
@@ -29,7 +28,7 @@ exports.addPost = (req, res, next) => {
 
 	//CTRL formulaire cote server
 	let isOk = true
-	let checkSpecialCaractere = /^[^@&`~^#{}<>_=\[\]()/§$£€*\+]+$/
+	let checkSpecialCaractere = /^[^@&~#{}<>_=\[\]/§$*\+]+$/
 	if (!checkSpecialCaractere.test(title)) isOk = false
 	if (!checkSpecialCaractere.test(description)) isOk = false
 	if (!checkSpecialCaractere.test(userId)) isOk = false
@@ -83,7 +82,7 @@ exports.modifyPost = (req, res, next) => {
 
 	//CTRL formulaire cote server
 	let isOk = true
-	let checkSpecialCaractere = /^[^@&`~^#{}<>_=\[\]()/§$£€*\+]+$/
+	let checkSpecialCaractere = /^[^@&~#{}<>_=\[\]/§$*\+]+$/
 	if (!checkSpecialCaractere.test(title)) isOk = false
 	if (!checkSpecialCaractere.test(description)) isOk = false
 
@@ -109,7 +108,7 @@ exports.modifyPostWithFile = (req, res, next) => {
 
 	//CTRL formulaire cote server
 	let isOk = true
-	let checkSpecialCaractere = /^[^@&`~^#{}<>_=\[\]()/§$£€*\+]+$/
+	let checkSpecialCaractere = /^[^@&~#{}<>_=\[\]/§$*\+]+$/
 	if (!checkSpecialCaractere.test(title)) isOk = false
 	if (!checkSpecialCaractere.test(description)) isOk = false
 

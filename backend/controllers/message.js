@@ -30,7 +30,7 @@ exports.modifyOneMessage = (req, res, next) => {
 
 	//CTRL formulaire cote server
 	let isOk = true
-	let checkSpecialCaractere = /^[^@&`~^#{}<>_=\[\]\\/§$*\+]+$/
+	let checkSpecialCaractere = /^[^@&~#{}<>_=\[\]/§$*\+]+$/
 	if (!checkSpecialCaractere.test(content)) isOk = false
 
 	if (isOk) {
@@ -53,7 +53,7 @@ exports.createNewMessage = (req, res, next) => {
 
 	//CTRL formulaire cote server
 	let isOk = true
-	let checkSpecialCaractere = /^[^@&`~^#{}<>_=\[\]\\/§$*\+]+$/
+	let checkSpecialCaractere = /^[^@&~#{}<>_=\[\]/§$*\+]+$/
 	if (!checkSpecialCaractere.test(content)) isOk = false
 
 	if (isOk) {

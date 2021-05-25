@@ -4,7 +4,7 @@ const path = require("path")
 
 //Ces paquets sont là pour la sécurité
 const helmet = require('helmet')
-const toobusy = require('toobusy-js');
+const toobusy = require('toobusy-js')
 require('dotenv').config()
 
 //Les routes
@@ -19,25 +19,24 @@ const app = express()
 app.use(helmet())										//Pour la sécurité: XSS filter, contentSecurityPolicy, frameguard, noSniff etc... (voir: https://helmetjs.github.io/)
 app.use(function (req, res, next) {				//Pour éviter les attaque (D)DoS: block les requetes quand le server est trop occupé
 	if (toobusy()) {
-		res.status(503).send('Server Too Busy');
+		res.status(503).send('Server Too Busy')
 	} else {
-		next();
+		next()
 	}
-});
+})
 
 //CORS headers
 app.use((req, res, next) => {
-	res.setHeader('Access-Control-Allow-Origin', '*');// http://127.0.0.1:4200 on autorise que les requetes localhosts, idealement https://nomDomaine.com
-	res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+	res.setHeader('Access-Control-Allow-Origin', '*')// http://127.0.0.1:4200 on autorise que les requetes localhosts, idealement https://nomDomaine.com
+	res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization')
+	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
 	next();
 });
 
 
 app.use(express.json())									   //On indique que les échanges se fonds en JSON
-//app.use(express.urlencoded({ extended: false }))	//Pour accepter les POST/PUT au format formData
 
-app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/images', express.static(path.join(__dirname, 'images')))
 
 app.use('/auth/', userRoutes)
 app.use('/post/', postRoutes)
