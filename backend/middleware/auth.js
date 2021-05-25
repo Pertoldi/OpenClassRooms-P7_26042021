@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
 		if (req.body.userId && reqUserId !== String(userId)) { 		//Si on a un userId dans le corps de la requête et que celui-ci est différent de l'userId du token
 			throw 'Invalid user ID'
 		} else {
-			next()																	//TODO envoyer userId à chaque requete et inverser se If Else
+			next()																
 		}
 	} catch (error) {
 		res.status(401).json({ error: 'Requête non authentifiée !' })  // si il y a une erreur envoie l'erreur, si un pb sans erreur renvoyé -> req non authentifié
