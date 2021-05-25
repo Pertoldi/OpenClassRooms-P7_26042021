@@ -2,15 +2,15 @@
 	<div class="container-fluid postCard">
 		<div class="postCard__titleContainer">
 			<h3>{{ postTitle }}</h3>
-			<div (click)="onPostSetting(thisPost)" *ngIf="isMyPost">
+			<div (click)="onPostSetting(thisPost)" *ngIf="isMyPost" aria-label="option du post" role="button">
 				<i class="fas fa-circle"></i>
 				<i class="fas fa-circle"></i>
 				<i class="fas fa-circle"></i>
 				<div class="postCard__titleContainer--options" #thisPost>
 					<ul class="list-group">
-						<li class="list-group-item list-group-item-action list-group-item-success" (click)="onModify()">
+						<li class="list-group-item list-group-item-action list-group-item-success" (click)="onModify()" aria-hidden="true" role="button">
 							Modifier</li>
-						<li class="list-group-item list-group-item-action list-group-item-danger" (click)="onDelete()">
+						<li class="list-group-item list-group-item-action list-group-item-danger" (click)="onDelete()" aria-hidden="true" role="button">
 							Supprimer</li>
 					</ul>
 				</div>
