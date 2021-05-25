@@ -51,6 +51,7 @@ export class PostModifyComponent implements OnInit {
     const id = this.getURLParam()
 
     this.postsService.modifyPost(id, title, description, this.file).then(() => {
+      this.errorMessage = ''
       this.router.navigate(['/post-list'])
     }).catch((error) => {
       this.errorMessage = error.error.message

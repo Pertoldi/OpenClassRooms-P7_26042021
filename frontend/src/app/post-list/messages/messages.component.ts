@@ -97,8 +97,8 @@ export class MessagesComponent implements OnInit {
 
 	onSubmitModifyForm() {
 		const newContent = this.modifyMessageForm.get('message')!.value
-		console.log('newContent is :', newContent)
 		this.messagesService.modifyMessage(this.messageId, newContent).then(() => {
+			this.errorMessage = ''
 			this.content = newContent
 			this.onMessageSetting()
 		}).catch((error) => {
