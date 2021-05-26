@@ -1,7 +1,7 @@
 <li class="list-group-item my-4">
 	<div class="container-fluid postCard">
 		<div class="postCard__titleContainer">
-			<h3>{{ postTitle }}</h3>
+			<h2>{{ postTitle }}</h2>
 			<div (click)="onPostSetting(thisPost)" *ngIf="isMyPost" aria-label="option du post" role="button">
 				<i class="fas fa-circle"></i>
 				<i class="fas fa-circle"></i>
@@ -39,9 +39,10 @@
 		<app-messages *ngFor="let message of messages" [messageUserId]="message.userId" [content]="message.content"
 			[messageId]="message.id" (oneLessMessage)=onDeleteMessage()></app-messages>
 
-		<form [formGroup]="messageForm" class="mt-3 messageFormulaire">
+		<form [formGroup]="messageForm" class="mt-3 messageFormulaire" aria-label="nouveau message">
 			<div class="form-group messageFormulaire__formGroup">
-				<textarea formControlName="newMessage" rows="1" id="newMessage" class="form-control" placeholder="Nouveau message"></textarea>
+				<label for="newMessage{{postId}}">Nouveau message</label>
+				<textarea formControlName="newMessage" rows="1" id="newMessage{{postId}}" class="form-control" placeholder="Nouveau message"></textarea>
 			</div>
 			<i class="fas fa-angle-double-right messageFormulaire__Icon" (click)="onNewMessage()"></i>
 			<p class="text-danger">{{ errorMessage }}</p>
